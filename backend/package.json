@@ -1,0 +1,32 @@
+{
+  "name": "chat-sample",
+  "version": "0.0.0",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "cross-env SERVER=local node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "date-utils": "^1.2.21",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-namespace": "^0.1.1",
+    "hashmap": "^2.4.0",
+    "http-errors": "~1.6.3",
+    "ioredis": "^4.22.0",
+    "moment": "^2.29.1",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "pm2": "^4.5.4",
+    "random-key": "^0.3.2",
+    "redis": "^3.0.2",
+    "socket.io": "^3.1.1",
+    "socket.io-client": "^4.5.0",
+    "socket.io-redis": "^6.0.1"
+  }
+}

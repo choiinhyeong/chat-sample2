@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Socket.IO Chat Example</title>
+
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="iframe-area"
+             style="width: 560px; height: 315px; border: 2px solid lightgray;
+               border-radius: 5px;
+               margin: 20px auto;
+               display: none;">
+        </div>
+        <ul class="pages" style="height: 95%; position: relative;
+              margin: 5px;
+              border: 2px solid lightgray;
+              border-radius: 5px;
+              width: 99%;">
+            <li class="chat page chatpage">
+                <div class="chatArea">
+                    <ul class="messages"></ul>
+                </div>
+                <input class="inputMessage" placeholder="Type here..."/>
+            </li>
+            <li class="login page loginpage">
+                <div class="form">
+                    <h3 class="title">닉네임을 입력하세요.</h3>
+                    <input class="usernameInput" type="text" maxlength="14"/>
+                </div>
+            </li>
+        </ul>
+        <div class="btn-area" style="display: none;">
+            <button type="button" class="iframe-btn">iframe show</button>
+            <button type="button" class="iframe-hide-btn">iframe hide</button>
+            <button type="button" class="yt-btn">유튜브</button>
+            <button type="button" class="exitButtion" style="display: none;">퇴장</button>
+        </div>
+
+        <script type="text/javascript" src="/main.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js"></script>
+    </body>
+</html>

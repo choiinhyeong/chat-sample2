@@ -134,7 +134,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnectCustom',async (data) => {
         console.log('==============================>disconnectCustom');
-        io.to(socket.userInfo.channelNo).emit('disconnectCustom',data);
+        // io.to(socket.userInfo.channelNo).emit('disconnectCustom',data);
     });
 
 
@@ -206,7 +206,7 @@ io2.on('connection', (socket) => {
 
     socket.on('disconnectCustom',async () => {
         console.log('==============================>io2 disconnectCustom');
-        io2.to(socket.userInfo.channelNo).emit('disconnectCustom');
+        // io2.to(socket.userInfo.channelNo).emit('disconnectCustom');
     });
 
 

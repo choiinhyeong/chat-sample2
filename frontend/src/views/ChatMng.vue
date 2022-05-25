@@ -59,22 +59,20 @@ export default {
     const socketId = ref('');
     const socketId2 = ref('');
     const inputMessage = ref('');
+    const iframeAreaEl = ref();
+    const chatPageEl = ref();
+    const loginPageEl = ref();
+    const btnAreaEl = ref();
+    const messagesEl = ref();
+    const freezeEl = ref();
+    const inputMessageEl = ref();
+    const showQuizEl = ref();
     const connected = ref(false);
-    const iframeAreaEl = ref(null);
-    const chatPageEl = ref(null);
-    const loginPageEl = ref(null);
-    const btnAreaEl = ref(null);
-    const messagesEl = ref(null);
-    const freezeEl = ref(null);
-    const inputMessageEl = ref(null);
-    const showQuizEl = ref(null);
     const isConnectLive = ref(false);
-
 
     onMounted(() => {
       // console.log('onmounted-----',socket.disconnected,',',socket.disconnected);
     })
-
 
     let userId ="userid1";
 
@@ -149,7 +147,7 @@ export default {
       console.log('socket chat_channel_connection-----------',data)
       socketId.value = data.socketId;
       let li = document.createElement('li')
-      li.innerText = data.userName + "님이 \""+channelNo.value+"\" 에 입장 하였습니다.";
+      li.innerText = data.userName + "님이 \""+channelNo.value+"\"채널에 입장했습니다.";
       messagesEl.value.append(li);
 
       chatPageEl.value.style.display='block'
@@ -160,6 +158,7 @@ export default {
     socket.on('message', (data) => {
       let li = document.createElement('li')
       li.innerText = data.userName + "  : " + data.message;
+      console.log('messagesEl;;',messagesEl)
       messagesEl.value.append(li);
     });
 

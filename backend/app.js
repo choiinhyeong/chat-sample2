@@ -24,7 +24,6 @@ io.attach(server)
 io2.attach(server)
 
 const port = 3000;
-
 console.log("process.env.SERVER : " , process.env.SERVER);
 
 const moment = require('moment');
@@ -36,10 +35,12 @@ app.use(bodyParser.urlencoded({extended : true}));
 const mysql = require('mysql');
 const dbConfig = require('./config/db_info')[process.env.SERVER];
 const pool = mysql.createPool(dbConfig);
-const channelSql = require('./db_mapper/channel');
+// const channelSql = require('./db_mapper/channel');
 
 
-/* 레디스 관련 */
+/**
+ *  기존 레디스 관련
+ */
 // const redisStore  = require('socket.io-redis');
 // const redis = require('ioredis');
 // let redisClient = null;

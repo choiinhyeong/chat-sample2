@@ -19,12 +19,12 @@ window.onload = function() {
     let lastTypingTime;
     // let $currentInput = $usernameInput.focus();
 
-    // let socketDns = "https://nodechat.egosfind.com";
-    let socketDns = "http://localhost:8081";
+    let socketDns = "https://nodechat.egosfind.com";
+    // let socketDns = "http://localhost:3000";
 
     // TODO - Change your url
     let socket = io(socketDns, {transports: ['websocket'], path: '/websocket'});
-    let socket2 = io(socketDns, {transports: ['websocket'], path: '/socket.io'});
+    // let socket2 = io(socketDns, {transports: ['websocket'], path: '/socket.io'});
 
     // Sets the client's username
     const setUsername = () => {
@@ -53,7 +53,7 @@ window.onload = function() {
             }
             // Tell the server your username
             socket.emit('chat_channel_connection', data);
-            socket2.emit('message_channel_connection', data);
+            // socket2.emit('message_channel_connection', data);
         }
     }
 
@@ -94,7 +94,7 @@ window.onload = function() {
         console.log('sendDisconnect;;', data);
         // tell server to execute 'new message' and send along one parameter
         socket.emit('disconnectCustom', data);
-        socket2.emit('disconnectCustom', data);
+        // socket2.emit('disconnectCustom', data);
     }
 
     // Whenever the server emits 'new message', update the chat body
@@ -134,92 +134,92 @@ window.onload = function() {
     });
 
 
-    /**
-     * socket2 채팅 외 이벤트 관련
-     */
-    const ytBtn = document.getElementsByClassName('yt-btn')[0];
-    const iframeBtn = document.getElementsByClassName('iframe-btn')[0];
-    const iframeHideBtn = document.getElementsByClassName('iframe-hide-btn')[0];
-
-    iframeBtn.addEventListener('click', e => {
-        console.log('iframeBtn;;');
-        let channelNo = "channel1";
-        let userId = "userid1";
-        let data = {
-            sendType: 'message',
-            socketId: socketId,
-            userName: username,
-            channelNo: channelNo,
-            userId: userId,
-            messageType: 'iframeShow'
-        }
-
-        socket2.emit('message', data)
-    })
-
-    iframeHideBtn.addEventListener('click', e => {
-        console.log('iframeHideBtn;;');
-        let channelNo = "channel1";
-        let userId = "userid1";
-        let data = {
-            sendType: 'message',
-            socketId: socketId,
-            userName: username,
-            channelNo: channelNo,
-            userId: userId,
-            messageType: 'iframeHide'
-        }
-
-        socket2.emit('message', data)
-    })
-
-    ytBtn.addEventListener('click', e => {
-        console.log('ytBtn;;')
-        let channelNo = "channel1";
-        let userId = "userid1";
-        let data = {
-            sendType: 'message',
-            socketId: socketId,
-            userName: username,
-            channelNo: channelNo,
-            userId: userId,
-            messageType: 'youtube'
-        }
-
-        socket2.emit('message', data)
-    })
-
-    socket2.on('message_channel_connection', (data) => {
-        console.log('socket2 message_channel_connection;;;;', data)
-        let userName = data.userName;
-        socketId = data.socketId;
-        let li = document.createElement('li')
-        li.innerText = userName + "님이 message채널에 입장 하였습니다.";
-        // messages.append(li);
-    });
-
-    socket2.on('message', (data) => {
-        console.log('socket2 message;;;;', data);
-
-        if (data.messageType === 'youtube') {
-            window.open('https://www.youtube.com/', '_blank');
-        } else if (data.messageType === 'iframeShow') {
-            let tag = '<iframe width="560" height="315" src="https://www.youtube.com/embed/F2bMUR6GyNM" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>';
-            document.getElementsByClassName('iframe-area')[0].innerHTML = tag
-            document.getElementsByClassName('iframe-area')[0].style.display = 'block';
-        } else if (data.messageType === 'iframeHide') {
-            document.getElementsByClassName('iframe-area')[0].innerHTML = '';
-            document.getElementsByClassName('iframe-area')[0].style.display = 'none';
-        }
-    });
-
-    socket2.on('disconnect', () => {
-        console.log('socket2 disconnect;;;;')
-    });
-
-    socket2.on('disconnectCustom', () => {
-        console.log('socket2 disconnectCustom;;;;')
-    });
+    // /**
+    //  * socket2 채팅 외 이벤트 관련
+    //  */
+    // const ytBtn = document.getElementsByClassName('yt-btn')[0];
+    // const iframeBtn = document.getElementsByClassName('iframe-btn')[0];
+    // const iframeHideBtn = document.getElementsByClassName('iframe-hide-btn')[0];
+    //
+    // iframeBtn.addEventListener('click', e => {
+    //     console.log('iframeBtn;;');
+    //     let channelNo = "channel1";
+    //     let userId = "userid1";
+    //     let data = {
+    //         sendType: 'message',
+    //         socketId: socketId,
+    //         userName: username,
+    //         channelNo: channelNo,
+    //         userId: userId,
+    //         messageType: 'iframeShow'
+    //     }
+    //
+    //     socket2.emit('message', data)
+    // })
+    //
+    // iframeHideBtn.addEventListener('click', e => {
+    //     console.log('iframeHideBtn;;');
+    //     let channelNo = "channel1";
+    //     let userId = "userid1";
+    //     let data = {
+    //         sendType: 'message',
+    //         socketId: socketId,
+    //         userName: username,
+    //         channelNo: channelNo,
+    //         userId: userId,
+    //         messageType: 'iframeHide'
+    //     }
+    //
+    //     socket2.emit('message', data)
+    // })
+    //
+    // ytBtn.addEventListener('click', e => {
+    //     console.log('ytBtn;;')
+    //     let channelNo = "channel1";
+    //     let userId = "userid1";
+    //     let data = {
+    //         sendType: 'message',
+    //         socketId: socketId,
+    //         userName: username,
+    //         channelNo: channelNo,
+    //         userId: userId,
+    //         messageType: 'youtube'
+    //     }
+    //
+    //     socket2.emit('message', data)
+    // })
+    //
+    // socket2.on('message_channel_connection', (data) => {
+    //     console.log('socket2 message_channel_connection;;;;', data)
+    //     let userName = data.userName;
+    //     socketId = data.socketId;
+    //     let li = document.createElement('li')
+    //     li.innerText = userName + "님이 message채널에 입장 하였습니다.";
+    //     // messages.append(li);
+    // });
+    //
+    // socket2.on('message', (data) => {
+    //     console.log('socket2 message;;;;', data);
+    //
+    //     if (data.messageType === 'youtube') {
+    //         window.open('https://www.youtube.com/', '_blank');
+    //     } else if (data.messageType === 'iframeShow') {
+    //         let tag = '<iframe width="560" height="315" src="https://www.youtube.com/embed/F2bMUR6GyNM" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>';
+    //         document.getElementsByClassName('iframe-area')[0].innerHTML = tag
+    //         document.getElementsByClassName('iframe-area')[0].style.display = 'block';
+    //     } else if (data.messageType === 'iframeHide') {
+    //         document.getElementsByClassName('iframe-area')[0].innerHTML = '';
+    //         document.getElementsByClassName('iframe-area')[0].style.display = 'none';
+    //     }
+    // });
+    //
+    // socket2.on('disconnect', () => {
+    //     console.log('socket2 disconnect;;;;')
+    // });
+    //
+    // socket2.on('disconnectCustom', () => {
+    //     console.log('socket2 disconnectCustom;;;;')
+    // });
 
 
     // events => Updates the typing event

@@ -3,11 +3,12 @@ require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 let channelSql = require('../db_mapper/channel.js');
 
-module.exports = function(app,io,pool )
+
+module.exports = function(app,io,pool)
 {
-    app.get('/chat/api/get/user', async function (req, res, next) {
+    app.get('/get/user', async function (req, res, next) {
         console.log('===============> /chat/api/get/user')
-        pool.getConnection(function(err, connection){
+        pool.getConnection((err, connection) => {
             console.log('getConnection-----------------')
             if ( err ) {
                 throw err;

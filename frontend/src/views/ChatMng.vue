@@ -26,11 +26,11 @@
       </ul>
       <div class="btnarea" ref="btnAreaEl" style="display: none;">
         <button type="button" class="iframe-btn" @click="showIframe">iframe show</button>
-        <button type="button" class="iframe-hide-btn" @click="hideIframe">iframe hide</button>
         <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
         <button type="button" @click="connectLiveFunc">커넥트라이브</button>
         <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>
-        <button type="button" @click="freezeFunc" ref="freezeEl">잠금</button>
+        <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
+        <button type="button" class="iframe-hide-btn" @click="hideIframe">화면 초기화</button>
         <button type="button" class="exitButtion" @click="sendDisconnect">퇴장</button>
       </div>
     </div>
@@ -49,7 +49,7 @@ export default {
   },
   setup(){
 
-    let socketDns = "http://localhost:8081";
+    let socketDns = "http://localhost:3000";
 
     let socket = io(socketDns, { transports: ['websocket'], path:'/websocket' });
     let socket2 = io(socketDns, { transports: ['websocket'], path:'/socket.io' });
@@ -437,8 +437,8 @@ ul {
   /*margin-top: -100px;*/
   /*position: absolute;*/
 
-  /*text-align: center;*/
-  top: 50%;
+  text-align: center;
+  top: 45%;
   width: 100%;
   position: relative;
   margin: 30px 0;

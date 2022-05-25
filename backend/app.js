@@ -23,8 +23,8 @@ app.all('/*', function(req, res, next) {
 io.attach(server)
 io2.attach(server)
 
-const port = 8081;
-console.log('==========app.js=========')
+const port = 3000;
+
 console.log("process.env.SERVER : " , process.env.SERVER);
 
 const moment = require('moment');
@@ -33,11 +33,13 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
+const mysql = require('mysql');
+const dbConfig = require('./config/db_info')[process.env.SERVER];
+const pool = mysql.createPool(dbConfig);
+const channelSql = require('./db_mapper/channel');
 
-console.log("==========================>");
-console.log(process.env.SERVER);
 
-
+/* 레디스 관련 */
 // const redisStore  = require('socket.io-redis');
 // const redis = require('ioredis');
 // let redisClient = null;
@@ -53,23 +55,12 @@ console.log(process.env.SERVER);
 //         connectTimeout: 5000
 //     });
 //     redisStoreHost = 'node-chat-redis.n0nyz5.ng.0001.apn2.cache.amazonaws.com';
-//
-// }else{
-//     redisClient = new redis.Cluster([
-//         {port: 6379, host: 'redisc-5jmiu.vpc-cdb.ntruss.com'},
-//         {port: 6379, host: 'redisc-5jmj7.vpc-cdb.ntruss.com'},
-//         {port: 6379, host: 'redisc-5jmj1.vpc-cdb.ntruss.com'},
-//         {port: 6379, host: 'redisc-5jmja.vpc-cdb.ntruss.com'},
-//         {port: 6379, host: 'redisc-5jmj4.vpc-cdb.ntruss.com'},
-//         {port: 6379, host: 'redisc-5jmjd.vpc-cdb.ntruss.com'}
-//     ]);
-//
-//     redisStoreHost = 'redisc-5jmiu.vpc-cdb.ntruss.com';
 // }
 //
 // // Adapting Redis
 // io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
+// const indexRouter = require('./routes/api') (app,io,redisClient,pool );
 
 // Routing
 app.use(express.static(path.join(__dirname, 'public')));
@@ -180,6 +171,10 @@ io2.on('connection', (socket) => {
 
         data.socketId = socket.id;
         data.connectDate = currentDate;
+
+        if(data.type==='getUser'){
+            a
+        }
 
         io2.to(data.channelNo).emit('message', data);
     });

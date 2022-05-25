@@ -11,7 +11,7 @@ export default {
   setup(){
 
     const moveFunc = () => {
-      window.open('http://localhost:8082/chat');
+      window.open('/chat')
     }
 
     return{

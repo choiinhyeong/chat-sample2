@@ -4,14 +4,9 @@ module.exports = (function () {
      host: '10.141.30.122',
       port: '6379'
     },
-    stg: { // localhost
-      //host: 'redisc-5h6kv.vpc-cdb.ntruss.com',
-      host: '10.141.30.122',
-      port: '6379'
-    },
-    real: { // localhost
-      host: '10.141.30.122',
-      port: '6379'
-    },
+    // real: { // 운영
+    //   host: '10.140.29.23',
+    //   port: '6379'
+    // },
   }
 })();

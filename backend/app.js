@@ -38,7 +38,6 @@ app.use(bodyParser.urlencoded({extended : true}));
 
 
 const pool = mysql.createPool(dbConfig);
-// const channelSql = require('./db_mapper/channel');
 
 console.log("process.env.SERVER : " , process.env.SERVER);
 

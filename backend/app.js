@@ -23,8 +23,12 @@ app.all('/*', function(req, res, next) {
 io.attach(server)
 io2.attach(server)
 
+const redisStore  = require('socket.io-redis');
+const redis = require('ioredis');
 const port = 3000;
-console.log("process.env.SERVER : " , process.env.SERVER);
+
+const mysql = require('mysql');
+const dbConfig = require('./config/db_info')[process.env.SERVER];
 
 const moment = require('moment');
 
@@ -32,36 +36,39 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
-const mysql = require('mysql');
-const dbConfig = require('./config/db_info')[process.env.SERVER];
+
 const pool = mysql.createPool(dbConfig);
 // const channelSql = require('./db_mapper/channel');
 
+console.log("process.env.SERVER : " , process.env.SERVER);
 
 /**
  *  기존 레디스 관련
  */
-// const redisStore  = require('socket.io-redis');
-// const redis = require('ioredis');
-// let redisClient = null;
-// let redisStoreHost = null;
-// // let redisTimeout = require('./');
-// // redisTimeout(redis, 5000);
-//
-//
+
+let redisClient = null;
+let redisStoreHost = null;
+
 // if(process.env.SERVER == 'local'){
+    redisClient = new redis({
+        port: 6379,
+        host: 'pea-hrd-dev-redis.o88ccj.0001.apn2.cache.amazonaws.com',
+        connectTimeout: 10000
+    });
+    redisStoreHost = 'pea-hrd-dev-redis.o88ccj.0001.apn2.cache.amazonaws.com';
+// }else{
 //     redisClient = new redis({
 //         port: 6379,
-//         host: 'node-chat-redis.n0nyz5.ng.0001.apn2.cache.amazonaws.com',
-//         connectTimeout: 5000
+//         host: 'pea-hrd-prd-redis-01-001.xnnhk0.0001.apn2.cache.amazonaws.com',
+//         connectTimeout: 10000
 //     });
-//     redisStoreHost = 'node-chat-redis.n0nyz5.ng.0001.apn2.cache.amazonaws.com';
+//     redisStoreHost = 'pea-hrd-prd-redis-01-001.xnnhk0.0001.apn2.cache.amazonaws.com';
 // }
-//
-// // Adapting Redis
-// io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
-// const indexRouter = require('./routes/api') (app,io,redisClient,pool );
+// Adapting Redis
+io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
+
+const apiRouter = require('./routes/api') (app,io,redisClient,pool);
 
 // Routing
 app.use(express.static(path.join(__dirname, 'public')));
@@ -86,7 +93,7 @@ io.on('connection', (socket) => {
         data.socketId = socket.id;
 
         //레디스 채널별로 접속자 저장
-        // await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
+        await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
 
         io.to(data.channelNo).emit('chat_channel_connection', data);
 
@@ -94,7 +101,6 @@ io.on('connection', (socket) => {
 
     socket.on('message', async (data) => {
         console.log('==============================>message');
-        console.log(data);
 
         const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -110,7 +116,7 @@ io.on('connection', (socket) => {
 
         if(socket.userInfo != undefined){
             //레이디스 데이터 삭제
-            // redisClient.hdel(socket.userInfo.channelNo,socket.userInfo.socketId);
+            redisClient.hdel(socket.userInfo.channelNo,socket.userInfo.socketId);
 
             socket.broadcast.to(socket.userInfo.channelNo).emit('disconnectCustom', {
                 "userinfo" : socket.userInfo
@@ -157,9 +163,8 @@ io2.on('connection', (socket) => {
         data.socketId = socket.id;
 
         //레디스 채널별로 접속자 저장
-        // await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
+        await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
 
-        // data.freezingYn = await redisClient.hmget("channelFreezingInfo", data.channelNo);
         io2.to(data.channelNo).emit('message_channel_connection', data);
 
     });
@@ -173,10 +178,6 @@ io2.on('connection', (socket) => {
         data.socketId = socket.id;
         data.connectDate = currentDate;
 
-        if(data.type==='getUser'){
-            a
-        }
-
         io2.to(data.channelNo).emit('message', data);
     });
 
@@ -186,7 +187,7 @@ io2.on('connection', (socket) => {
 
         if(socket.userInfo != undefined){
             //레이디스 데이터 삭제
-            // redisClient.hdel(socket.userInfo.channelNo,socket.userInfo.socketId);
+            redisClient.hdel(socket.userInfo.channelNo,socket.userInfo.socketId);
 
             socket.broadcast.to(socket.userInfo.channelNo).emit('disconnectCustom', {
                 "userinfo" : socket.userInfo

@@ -25,11 +25,12 @@
         </li>
       </ul>
       <div class="btnarea" ref="btnAreaEl" style="display: none;">
-        <button type="button" class="iframe-btn" @click="showIframe">iframe show</button>
+        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>
         <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
         <button type="button" @click="connectLiveFunc">커넥트라이브</button>
         <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>
         <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
+        <button type="button" @click="getUserFunc">db 회원조회</button>
         <button type="button" class="iframe-hide-btn" @click="hideIframe">화면 초기화</button>
         <button type="button" class="exitButtion" @click="sendDisconnect">퇴장</button>
       </div>
@@ -41,6 +42,9 @@
 import {onMounted, ref} from "vue";
 import io from 'socket.io-client'
 import ConnectLive from "@/components/ConnectLive";
+import {useStore} from "vuex";
+import {ACT_GET_USERS} from "@/store/modules/user/users";
+
 
 export default {
   name: "ChatMng",
@@ -48,6 +52,8 @@ export default {
     ConnectLive
   },
   setup(){
+
+    const store = useStore();
 
     let socketDns = "http://localhost:3000";
 
@@ -181,6 +187,14 @@ export default {
       socketId2.value = data.socketId;
     });
 
+    socket2.on('disconnect', () => {
+      console.log('socket2 disconnect---------------')
+    });
+
+    socket2.on('disconnectCustom', () => {
+      console.log('socket2 disconnectCustom--------------')
+    });
+
     socket2.on('message', (data) => {
       console.log('socket2 message-------------------', data);
       if (data.messageType === 'youtube') {
@@ -205,15 +219,9 @@ export default {
       }else if(data.messageType === 'connectLive'){
         isConnectLive.value = true;
         iframeAreaEl.value.style.display = 'block';
+      }else if(data.messageType === 'getUser'){
+        alert(data.res)
       }
-    });
-
-    socket2.on('disconnect', () => {
-      console.log('socket2 disconnect---------------')
-    });
-
-    socket2.on('disconnectCustom', () => {
-      console.log('socket2 disconnectCustom--------------')
     });
 
     /**
@@ -299,6 +307,29 @@ export default {
       socket2.emit('message', data)
     }
 
+    const getUserFunc = () => {
+      let userSn = prompt("회원번호를 입력하세요.");
+      console.log('userSn===>',userSn)
+      store.dispatch(`users/${ACT_GET_USERS}`, userSn)
+          .then((res) => {
+            console.log('res====>',res.data[0])
+            if (res.status === 200) {
+              let data = {
+                sendType: 'message',
+                socketId: socketId2.value,
+                userName: userName.value,
+                channelNo: channelNo.value,
+                userId: userId,
+                messageType: 'getUser',
+                res: JSON.stringify(res.data[0])
+              }
+              socket2.emit('message', data)
+            }
+          }).catch(e => {
+        console.error(e);
+      });
+    }
+
     // events => Updates the typing event
     const updateTyping = () => {
       let typing = true;
@@ -345,6 +376,7 @@ export default {
       hideIframe,
       youtubeFunc,
       freezeFunc,
+      getUserFunc,
       connectLiveFunc,
       updateTyping,
     }
@@ -451,7 +483,8 @@ ul {
   /*padding-bottom: 15px;*/
   text-align: center;
   /*width: 400px;*/
-  width:80%;
+  width:60%;
+  margin-left: 20px;
 }
 
 .login.page .title {

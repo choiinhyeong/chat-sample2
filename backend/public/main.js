@@ -19,8 +19,8 @@ window.onload = function() {
     let lastTypingTime;
     // let $currentInput = $usernameInput.focus();
 
-    let socketDns = "https://nodechat.egosfind.com";
-    // let socketDns = "http://localhost:3000";
+    // let socketDns = "https://nodechat.egosfind.com";
+    let socketDns = "http://localhost:3000";
 
     // TODO - Change your url
     let socket = io(socketDns, {transports: ['websocket'], path: '/websocket'});

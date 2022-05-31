@@ -139,6 +139,10 @@ export default {
             remoteVideos = await this.conf.subscribe(videoIds);
           }
 
+          console.log('participant ====> ', participant)
+          console.log('unsubscribedVideos ===> ', unsubscribedVideos);
+          console.log('remoteVideos ====> ', remoteVideos)
+
           this.remoteParticipants.push({
             participant: participant,
             videos: remoteVideos,

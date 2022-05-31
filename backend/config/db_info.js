@@ -1,13 +1,13 @@
 module.exports = (function () {
     return {
         local: {
-            host: 'rds-mysql-kb-dev.cekhcviahx46.ap-northeast-2.rds.amazonaws.com',
-            port: '3306',
-            user: 'admin',
-            password: '!!kbdbdev!!',
-            database: 'PEA_MY',
-            multipleStatements: true,
-            connectionLimit:30
+            host: process.env.DATABASE_HOST,
+            port: process.env.DATABASE_PORT,
+            user: process.env.DATABASE_USER,
+            password: process.env.DATABASE_PASSWORD,
+            database: process.env.DATABASE_DATABASE,
+            // multipleStatements: true,
+            // connectionLimit:30
         },
     }
 })();

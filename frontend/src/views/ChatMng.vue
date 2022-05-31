@@ -1,8 +1,24 @@
 <template>
   <div style="display: flex;">
     <div class="wrap left-wrap">
-      <div class="iframe-area" ref="iframeAreaEl">
-        <ConnectLive v-if="isConnectLive"></ConnectLive>
+      <div style="width: 100%; height:100%;">
+        <div class="iframe-area" ref="iframeAreaEl"></div>
+        <div class="connect-area" ref="connectAreaEl" style="display: none;">
+          <ConnectLive v-if="isConnectLive"></ConnectLive>
+          <ConnectLiveConf v-if="isConnectLiveConf"></ConnectLiveConf>
+          <ConnectLiveOne v-if="isConnectLiveOne"></ConnectLiveOne>
+        </div>
+      </div>
+      <div class="btnarea" ref="btnAreaEl" style="display: none;">
+<!--        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>-->
+        <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
+        <button type="button" @click="connectLiveFunc">커넥트라이브</button>
+        <button type="button" @click="connectLiveConfFunc">커넥트라이브_</button>
+<!--        <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>-->
+        <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
+<!--        <button type="button" @click="getUserFunc">db 회원조회</button>-->
+        <button type="button" class="iframe-hide-btn" @click="hideIframe">화면 초기화</button>
+        <button type="button" class="exitButtion" @click="sendDisconnect">퇴장</button>
       </div>
     </div>
     <div class="wrap right-wrap">
@@ -11,9 +27,17 @@
           <div class="chatArea">
             <ul class="messages" ref="messagesEl"></ul>
           </div>
-          <input class="inputMessage" ref="inputMessageEl" v-model="inputMessage" @keyup.enter="sendMessage" @keyup="updateTyping" placeholder="메세지를 입력하세요."/>
+          <div style="position: absolute; width: 100%; bottom: 0px;">
+            <input class="usernameInput" v-model="userType" type="text" maxlength="14" @keyup="updateType"/>
+            <input class="inputMessage" ref="inputMessageEl" v-model="inputMessage" @keyup.enter="sendMessage" @keyup="updateTyping" placeholder="메세지를 입력하세요."/>
+            <button type="button" @click="sendMessage">전송</button>
+          </div>
         </li>
         <li class="login page loginpage" ref="loginPageEl">
+          <div class="form">
+            <label>타입</label>
+            <input class="usernameInput" v-model="userType" @keyup.enter="sendUserName" type="text" maxlength="14"/>
+          </div>
           <div class="form">
             <label>채널</label>
             <input class="usernameInput" v-model="channelNo" @keyup.enter="sendUserName" type="text" maxlength="14"/>
@@ -22,18 +46,11 @@
             <label>닉네임</label>
             <input class="usernameInput" v-model="userName" @keyup.enter="sendUserName" type="text" maxlength="14"/>
           </div>
+          <div class="form">
+            <button type="button" @click="sendUserName">접속</button>
+          </div>
         </li>
       </ul>
-      <div class="btnarea" ref="btnAreaEl" style="display: none;">
-        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>
-        <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
-        <button type="button" @click="connectLiveFunc">커넥트라이브</button>
-        <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>
-        <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
-        <button type="button" @click="getUserFunc">db 회원조회</button>
-        <button type="button" class="iframe-hide-btn" @click="hideIframe">화면 초기화</button>
-        <button type="button" class="exitButtion" @click="sendDisconnect">퇴장</button>
-      </div>
     </div>
   </div>
 </template>
@@ -42,6 +59,8 @@
 import {onMounted, ref} from "vue";
 import io from 'socket.io-client'
 import ConnectLive from "@/components/ConnectLive";
+import ConnectLiveOne from "@/components/ConnectLiveOne";
+import ConnectLiveConf from "@/components/ConnectLiveConf";
 import {useStore} from "vuex";
 import {ACT_GET_USERS} from "@/store/modules/user/users";
 
@@ -49,6 +68,8 @@ import {ACT_GET_USERS} from "@/store/modules/user/users";
 export default {
   name: "ChatMng",
   components:{
+    ConnectLiveConf,
+    ConnectLiveOne,
     ConnectLive
   },
   setup(){
@@ -57,15 +78,17 @@ export default {
 
     let socketDns = "http://localhost:3000";
 
-    let socket = io(socketDns, { transports: ['websocket'], path:'/websocket' });
-    let socket2 = io(socketDns, { transports: ['websocket'], path:'/socket.io' });
+    let socket = io(socketDns, { transports: ['websocket'], path:'/websocket/chat' }); //채팅소켓
+    let socket2 = io(socketDns, { transports: ['websocket'], path:'/websocket/system' }); // 컨트롤소켓
 
     const userName = ref('');
     const channelNo = ref('');
+    const userType = ref('');
     const socketId = ref('');
     const socketId2 = ref('');
     const inputMessage = ref('');
     const iframeAreaEl = ref();
+    const connectAreaEl = ref();
     const chatPageEl = ref();
     const loginPageEl = ref();
     const btnAreaEl = ref();
@@ -75,12 +98,18 @@ export default {
     const showQuizEl = ref();
     const connected = ref(false);
     const isConnectLive = ref(false);
+    const isConnectLiveOne = ref(false);
+    const isConnectLiveConf = ref(false);
 
     onMounted(() => {
       // console.log('onmounted-----',socket.disconnected,',',socket.disconnected);
+      sendUserName();
     })
 
-    let userId ="userid1";
+    let userId ="userId1";
+    channelNo.value = 'ch1';
+    userName.value = 'choi';
+    userType.value = 'admin'
 
     /**
      * 클라이언트 이벤트
@@ -153,12 +182,14 @@ export default {
       console.log('socket chat_channel_connection-----------',data)
       socketId.value = data.socketId;
       let li = document.createElement('li')
-      li.innerText = data.userName + "님이 \""+channelNo.value+"\"채널에 입장했습니다.";
+      li.innerText = data.userName + "("+userType.value+")님이 \""+channelNo.value+"\"채널에 입장했습니다.";
       messagesEl.value.append(li);
 
       chatPageEl.value.style.display='block'
-      btnAreaEl.value.style.display='block'
       loginPageEl.value.style.display='none'
+      if(userType.value === 'admin'){
+        btnAreaEl.value.style.display='block'
+      }
     });
 
     socket.on('message', (data) => {
@@ -201,13 +232,17 @@ export default {
         window.open('https://www.youtube.com/', '_blank');
       } else if (data.messageType === 'iframeShow') {
         iframeAreaEl.value.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/F2bMUR6GyNM" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>';
-        iframeAreaEl.value.style.display = 'block';
+        iframeShowFunc();
       } else if (data.messageType === 'iframeHide') {
         iframeAreaEl.value.innerHTML = '';
         iframeAreaEl.value.style.display = 'none';
+        connectAreaEl.value.style.display = 'none';
+        isConnectLive.value = false;
+        isConnectLiveOne.value = false;
+        isConnectLiveConf.value = false;
       }else if(data.messageType === 'quizn'){
         iframeAreaEl.value.innerHTML = '<iframe width="100%" height="100%" src="'+data.url+'" title="quizn" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>';
-        iframeAreaEl.value.style.display = 'block';
+        iframeShowFunc();
       }else if(data.messageType === 'freeze'){
         if(!inputMessageEl.value.disabled){
           inputMessageEl.value.disabled = true;
@@ -218,11 +253,27 @@ export default {
         }
       }else if(data.messageType === 'connectLive'){
         isConnectLive.value = true;
-        iframeAreaEl.value.style.display = 'block';
+        connectLiveShowFunc();
+      }else if(data.messageType === 'connectLiveOne'){
+        isConnectLiveOne.value = true;
+        connectLiveShowFunc();
+      }else if(data.messageType === 'connectLiveConf') {
+        isConnectLiveConf.value = true;
+        connectLiveShowFunc();
       }else if(data.messageType === 'getUser'){
         alert(data.res)
       }
     });
+
+    const iframeShowFunc = () => {
+      iframeAreaEl.value.style.display = 'block';
+      connectAreaEl.value.style.display = 'none';
+    }
+
+    const connectLiveShowFunc = () => {
+      iframeAreaEl.value.style.display = 'none';
+      connectAreaEl.value.style.display = 'block';
+    }
 
     /**
      * 기능 함수들
@@ -236,6 +287,32 @@ export default {
         channelNo: channelNo.value,
         userId: userId,
         messageType: 'connectLive',
+      }
+      socket2.emit('message', data);
+    }
+
+    const connectLiveOneFunc = () => {
+      console.log('connectLiveOneFunc-----------');
+      let data = {
+        sendType: 'message',
+        socketId: socketId2.value,
+        userName: userName.value,
+        channelNo: channelNo.value,
+        userId: userId,
+        messageType: 'connectLiveOne',
+      }
+      socket2.emit('message', data);
+    }
+
+    const connectLiveConfFunc = () => {
+      console.log('connectLiveFunc-----------');
+      let data = {
+        sendType: 'message',
+        socketId: socketId2.value,
+        userName: userName.value,
+        channelNo: channelNo.value,
+        userId: userId,
+        messageType: 'connectLiveConf',
       }
       socket2.emit('message', data);
     }
@@ -351,14 +428,24 @@ export default {
       }
     }
 
+    const updateType = () => {
+      if(userType.value === 'admin'){
+        btnAreaEl.value.style.display='block';
+      }else{
+        btnAreaEl.value.style.display='none';
+      }
+    }
+
     return {
       userName,
       channelNo,
+      userType,
       socketId,
       socketId2,
       inputMessage,
       connected,
       iframeAreaEl,
+      connectAreaEl,
       chatPageEl,
       loginPageEl,
       btnAreaEl,
@@ -367,6 +454,8 @@ export default {
       inputMessageEl,
       showQuizEl,
       isConnectLive,
+      isConnectLiveOne,
+      isConnectLiveConf,
 
       sendUserName,
       sendMessage,
@@ -378,7 +467,12 @@ export default {
       freezeFunc,
       getUserFunc,
       connectLiveFunc,
+      connectLiveOneFunc,
+      connectLiveConfFunc,
       updateTyping,
+      updateType,
+      connectLiveShowFunc,
+      iframeShowFunc
     }
   }
 }
@@ -387,17 +481,24 @@ export default {
 <style scoped>
 
 /* add css */
-.iframe-area{
+.iframe-area, .connect-area{
   width: 100%;
   height: 100%;
   position: relative;
-  display: none;
+  /*display: none;*/
 }
+
 .wrap{
   flex-direction: row;
   height: 100vh;
   border: 2px solid lightgray;
   border-radius: 5px;
+}
+
+.btnarea{
+  display: block;
+  position: absolute;
+  bottom: 0;
 }
 
 .left-wrap{
@@ -443,11 +544,10 @@ ul {
 /* Pages */
 
 .pages {
-  /*height: 100%;*/
+  height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 95%;
   position: relative;
 }
 
@@ -527,8 +627,10 @@ ul {
 /* Messages */
 
 .chatArea {
+  position: absolute;
+  width: 100%;
   height: 100%;
-  padding-bottom: 60px;
+  /*padding-bottom: 60px;*/
 }
 
 .messages {
@@ -558,9 +660,9 @@ ul {
   left: 0;
   outline: none;
   padding-left: 10px;
-  position: absolute;
+  margin-right: 5px;
   right: 0;
-  width: 100%;
+  width: 90%;
 }
 
 

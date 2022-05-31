@@ -1,2 +1,9 @@
 # 프로젝트 제외 경로
 node_modules
+npm-packages-offline
+dist
+public
+
+yarn.*
+
+.yarnrc

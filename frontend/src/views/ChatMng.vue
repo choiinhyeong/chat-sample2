@@ -4,7 +4,7 @@
       <div style="width: 100%; height:100%;">
         <div class="iframe-area" ref="iframeAreaEl"></div>
         <div class="connect-area" ref="connectAreaEl" style="display: none;">
-          <ConnectLive v-if="isConnectLive"></ConnectLive>
+          <ConnectLiveCast v-if="isConnectLiveCast"></ConnectLiveCast>
           <ConnectLiveCall v-if="isConnectLiveCall"></ConnectLiveCall>
           <ConnectLiveConf v-if="isConnectLiveConf"></ConnectLiveConf>
         </div>
@@ -13,6 +13,7 @@
 <!--        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>-->
         <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
         <button type="button" @click="connectLiveFunc('call')">커넥트라이브_call</button>
+        <button type="button" @click="connectLiveFunc('cast')">커넥트라이브_cast</button>
         <button type="button" @click="connectLiveFunc('conf')">커넥트라이브_conf</button>
 <!--        <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>-->
         <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
@@ -58,9 +59,9 @@
 <script>
 import {onMounted, ref} from "vue";
 import io from 'socket.io-client'
-import ConnectLive from "@/components/ConnectLive";
 import ConnectLiveCall from "@/components/ConnectLiveCall";
 import ConnectLiveConf from "@/components/ConnectLiveConf";
+import ConnectLiveCast from "@/components/ConnectLiveCast";
 import {useStore} from "vuex";
 import {ACT_GET_USERS} from "@/store/modules/user/users";
 
@@ -68,9 +69,9 @@ import {ACT_GET_USERS} from "@/store/modules/user/users";
 export default {
   name: "ChatMng",
   components:{
+    ConnectLiveCast,
     ConnectLiveConf,
     ConnectLiveCall,
-    ConnectLive
   },
   setup(){
 
@@ -97,7 +98,7 @@ export default {
     const inputMessageEl = ref();
     const showQuizEl = ref();
     const connected = ref(false);
-    const isConnectLive = ref(false);
+    const isConnectLiveCast = ref(false);
     const isConnectLiveCall = ref(false);
     const isConnectLiveConf = ref(false);
 
@@ -255,8 +256,8 @@ export default {
           inputMessageEl.value.disabled = false;
           freezeEl.value.innerText = '잠금'
         }
-      }else if(data.messageType === 'connectLive'){
-        isConnectLive.value = true;
+      }else if(data.messageType === 'connectLiveCast'){
+        isConnectLiveCast.value = true;
         connectLiveShowFunc();
       }else if(data.messageType === 'connectLiveCall'){
         isConnectLiveCall.value = true;
@@ -283,6 +284,10 @@ export default {
         console.log('connectLiveFunc-----------');
         isConnectLiveConf.value = true;
         userData.value.messageType='connectLiveConf'
+      }else if(type === 'cast'){
+        console.log('connectLiveFunc-----------');
+        isConnectLiveCast.value = true;
+        userData.value.messageType='connectLiveCast'
       }
       
       socket2.emit('message', userData.value);
@@ -342,7 +347,9 @@ export default {
       });
     }
 
-    // events => Updates the typing event
+    /**
+     * 기타 이벤트함수들
+     */
     const updateTyping = () => {
       let typing = true;
       if (connected.value) {
@@ -377,7 +384,7 @@ export default {
       iframeAreaEl.value.innerHTML = '';
       iframeAreaEl.value.style.display = 'none';
       connectAreaEl.value.style.display = 'none';
-      isConnectLive.value = false;
+      isConnectLiveCast.value = false;
       isConnectLiveCall.value = false;
       isConnectLiveConf.value = false;
     }
@@ -405,7 +412,7 @@ export default {
       freezeEl,
       inputMessageEl,
       showQuizEl,
-      isConnectLive,
+      isConnectLiveCast,
       isConnectLiveCall,
       isConnectLiveConf,
 
@@ -609,7 +616,7 @@ ul {
   padding-left: 10px;
   margin-right: 5px;
   right: 0;
-  width: 90%;
+  width: 85%;
 }
 
 

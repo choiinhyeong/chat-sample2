@@ -5,15 +5,15 @@
         <div class="iframe-area" ref="iframeAreaEl"></div>
         <div class="connect-area" ref="connectAreaEl" style="display: none;">
           <ConnectLive v-if="isConnectLive"></ConnectLive>
+          <ConnectLiveCall v-if="isConnectLiveCall"></ConnectLiveCall>
           <ConnectLiveConf v-if="isConnectLiveConf"></ConnectLiveConf>
-          <ConnectLiveOne v-if="isConnectLiveOne"></ConnectLiveOne>
         </div>
       </div>
       <div class="btnarea" ref="btnAreaEl" style="display: none;">
 <!--        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>-->
         <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
-        <button type="button" @click="connectLiveFunc">커넥트라이브</button>
-        <button type="button" @click="connectLiveConfFunc">커넥트라이브_</button>
+        <button type="button" @click="connectLiveFunc('call')">커넥트라이브_call</button>
+        <button type="button" @click="connectLiveFunc('conf')">커넥트라이브_conf</button>
 <!--        <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>-->
         <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
 <!--        <button type="button" @click="getUserFunc">db 회원조회</button>-->
@@ -27,7 +27,7 @@
           <div class="chatArea">
             <ul class="messages" ref="messagesEl"></ul>
           </div>
-          <div style="position: absolute; width: 100%; bottom: 0px;">
+          <div>
             <input class="usernameInput" v-model="userType" type="text" maxlength="14" @keyup="updateType"/>
             <input class="inputMessage" ref="inputMessageEl" v-model="inputMessage" @keyup.enter="sendMessage" @keyup="updateTyping" placeholder="메세지를 입력하세요."/>
             <button type="button" @click="sendMessage">전송</button>
@@ -59,7 +59,7 @@
 import {onMounted, ref} from "vue";
 import io from 'socket.io-client'
 import ConnectLive from "@/components/ConnectLive";
-import ConnectLiveOne from "@/components/ConnectLiveOne";
+import ConnectLiveCall from "@/components/ConnectLiveCall";
 import ConnectLiveConf from "@/components/ConnectLiveConf";
 import {useStore} from "vuex";
 import {ACT_GET_USERS} from "@/store/modules/user/users";
@@ -69,7 +69,7 @@ export default {
   name: "ChatMng",
   components:{
     ConnectLiveConf,
-    ConnectLiveOne,
+    ConnectLiveCall,
     ConnectLive
   },
   setup(){
@@ -98,18 +98,39 @@ export default {
     const showQuizEl = ref();
     const connected = ref(false);
     const isConnectLive = ref(false);
-    const isConnectLiveOne = ref(false);
+    const isConnectLiveCall = ref(false);
     const isConnectLiveConf = ref(false);
 
     onMounted(() => {
       // console.log('onmounted-----',socket.disconnected,',',socket.disconnected);
       sendUserName();
+      initUserData();
+      iframeHideFunc();
     })
 
     let userId ="userId1";
     channelNo.value = 'ch1';
     userName.value = 'choi';
     userType.value = 'admin'
+
+    const userData = ref({
+      sendType:'',
+      socketId:'',
+      socketId2:'',
+      userName : userName.value,
+      channelNo : channelNo.value,
+      userId : userId,
+      message : '',
+      messageType : '',
+      url: '',
+    })
+
+    const initUserData = () => {
+      userData.value.sendType='';
+      userData.value.message='';
+      userData.value.messageType='';
+      userData.value.url='';
+    }
 
     /**
      * 클라이언트 이벤트
@@ -126,46 +147,30 @@ export default {
         socket2.connect();
       }
 
-      let data = {
-        sendType:'connection',
-        userName : userName.value,
-        channelNo : channelNo.value,
-        userId : userId,
-        message : "입장"
-      }
+      userData.value.sendType = 'connection'
+      userData.value.message = '입장'
 
-      socket.emit('chat_channel_connection', data);
-      socket2.emit('message_channel_connection', data);
+      socket.emit('chat_channel_connection', userData.value);
+      socket2.emit('message_channel_connection', userData.value);
     }
 
     const sendMessage = () => {
-      let data = {
-        sendType: 'message',
-        socketId: socketId,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        message: inputMessage.value
-      }
+
+      userData.value.sendType = 'message';
+      userData.value.message = inputMessage.value;
 
       // tell server to execute 'new message' and send along one parameter
-      socket.emit('message', data);
-      messagesEl.value.style.scrollTop = messagesEl.value.style.scrollHeight;
+      socket.emit('message', userData.value);
       inputMessage.value = '';
     }
 
     const sendDisconnect = () => {
       console.log('sendDisconnect-----------');
-      let data = {
-        sendType: 'disconnect',
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        message: ''
-      }
 
-      socket.emit('disconnectCustom', data);
-      socket2.emit('disconnectCustom', data);
+      userData.value.sendType = 'disconnect';
+
+      socket.emit('disconnectCustom', userData.value);
+      socket2.emit('disconnectCustom', userData.value);
 
       chatPageEl.value.style.display='none'
       btnAreaEl.value.style.display='none'
@@ -185,7 +190,7 @@ export default {
       li.innerText = data.userName + "("+userType.value+")님이 \""+channelNo.value+"\"채널에 입장했습니다.";
       messagesEl.value.append(li);
 
-      chatPageEl.value.style.display='block'
+      chatPageEl.value.style.display='flex'
       loginPageEl.value.style.display='none'
       if(userType.value === 'admin'){
         btnAreaEl.value.style.display='block'
@@ -196,6 +201,9 @@ export default {
       let li = document.createElement('li')
       li.innerText = data.userName + "  : " + data.message;
       console.log('messagesEl;;',messagesEl)
+      console.log(' messagesEl.value.style.scrollHeight===>', messagesEl.value.scrollHeight);
+      console.log(' messagesEl.value.style.scrollHeight===>', messagesEl.value.scrollTop);
+      messagesEl.value.scrollTop = messagesEl.value.scrollHeight;
       messagesEl.value.append(li);
     });
 
@@ -234,14 +242,10 @@ export default {
         iframeAreaEl.value.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/F2bMUR6GyNM" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>';
         iframeShowFunc();
       } else if (data.messageType === 'iframeHide') {
-        iframeAreaEl.value.innerHTML = '';
-        iframeAreaEl.value.style.display = 'none';
-        connectAreaEl.value.style.display = 'none';
-        isConnectLive.value = false;
-        isConnectLiveOne.value = false;
-        isConnectLiveConf.value = false;
+        iframeHideFunc();
       }else if(data.messageType === 'quizn'){
-        iframeAreaEl.value.innerHTML = '<iframe width="100%" height="100%" src="'+data.url+'" title="quizn" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>';
+        // iframeAreaEl.value.innerHTML = '<iframe width="100%" height="100%" src="'+data.url+'" title="quizn" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>';
+        window.open(data.url)
         iframeShowFunc();
       }else if(data.messageType === 'freeze'){
         if(!inputMessageEl.value.disabled){
@@ -254,8 +258,8 @@ export default {
       }else if(data.messageType === 'connectLive'){
         isConnectLive.value = true;
         connectLiveShowFunc();
-      }else if(data.messageType === 'connectLiveOne'){
-        isConnectLiveOne.value = true;
+      }else if(data.messageType === 'connectLiveCall'){
+        isConnectLiveCall.value = true;
         connectLiveShowFunc();
       }else if(data.messageType === 'connectLiveConf') {
         isConnectLiveConf.value = true;
@@ -265,123 +269,59 @@ export default {
       }
     });
 
-    const iframeShowFunc = () => {
-      iframeAreaEl.value.style.display = 'block';
-      connectAreaEl.value.style.display = 'none';
-    }
-
-    const connectLiveShowFunc = () => {
-      iframeAreaEl.value.style.display = 'none';
-      connectAreaEl.value.style.display = 'block';
-    }
-
     /**
      * 기능 함수들
      */
-    const connectLiveFunc = () => {
-      console.log('connectLiveFunc-----------');
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'connectLive',
+    const connectLiveFunc = (type) => {
+      console.log('connectLiveFunc-----------',type);
+      userData.value.sendType='message';
+      if(type === 'call'){
+        console.log('connectLiveCallFunc-----------');
+        isConnectLiveCall.value = true;
+        userData.value.messageType='connectLiveCall'
+      }else if(type === 'conf'){
+        console.log('connectLiveFunc-----------');
+        isConnectLiveConf.value = true;
+        userData.value.messageType='connectLiveConf'
       }
-      socket2.emit('message', data);
-    }
-
-    const connectLiveOneFunc = () => {
-      console.log('connectLiveOneFunc-----------');
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'connectLiveOne',
-      }
-      socket2.emit('message', data);
-    }
-
-    const connectLiveConfFunc = () => {
-      console.log('connectLiveFunc-----------');
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'connectLiveConf',
-      }
-      socket2.emit('message', data);
+      
+      socket2.emit('message', userData.value);
     }
 
     const showQuiz = () => {
-      let url = 'https://quizn.show/p/';
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'quizn',
-        url: url
-      }
+      userData.value.sendType='message';
+      userData.value.messageType='quizn'
+      userData.value.url = 'https://quizn.show/p/'
 
-      socket2.emit('message', data)
+      socket2.emit('message', userData.value);
     }
 
     const showIframe = () => {
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'iframeShow'
-      }
+      userData.value.sendType='message';
+      userData.value.messageType='iframeShow'
 
-      socket2.emit('message', data)
+      socket2.emit('message', userData.value);
     }
 
     const hideIframe = () => {
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'iframeHide'
-      }
+      userData.value.sendType='message';
+      userData.value.messageType='iframeHide'
 
-      socket2.emit('message', data)
+      socket2.emit('message', userData.value);
     }
 
     const youtubeFunc = () => {
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'youtube'
-      }
+      userData.value.sendType='message';
+      userData.value.messageType='youtube'
 
-      socket2.emit('message', data)
+      socket2.emit('message', userData.value);
     }
 
     const freezeFunc = () => {
-      let data = {
-        sendType: 'message',
-        socketId: socketId2.value,
-        userName: userName.value,
-        channelNo: channelNo.value,
-        userId: userId,
-        messageType: 'freeze'
-      }
+      userData.value.sendType='message';
+      userData.value.messageType='freeze'
 
-      socket2.emit('message', data)
+      socket2.emit('message', userData.value);
     }
 
     const getUserFunc = () => {
@@ -391,16 +331,11 @@ export default {
           .then((res) => {
             console.log('res====>',res.data[0])
             if (res.status === 200) {
-              let data = {
-                sendType: 'message',
-                socketId: socketId2.value,
-                userName: userName.value,
-                channelNo: channelNo.value,
-                userId: userId,
-                messageType: 'getUser',
-                res: JSON.stringify(res.data[0])
-              }
-              socket2.emit('message', data)
+              userData.value.sendType='message';
+              userData.value.messageType='getUser'
+              userData.value.res=JSON.stringify(res.data[0]);
+
+              socket2.emit('message', userData.value);
             }
           }).catch(e => {
         console.error(e);
@@ -428,6 +363,26 @@ export default {
       }
     }
 
+    const iframeShowFunc = () => {
+      iframeAreaEl.value.style.display = 'block';
+      connectAreaEl.value.style.display = 'none';
+    }
+
+    const connectLiveShowFunc = () => {
+      iframeAreaEl.value.style.display = 'none';
+      connectAreaEl.value.style.display = 'block';
+    }
+
+    const iframeHideFunc = () => {
+      iframeAreaEl.value.innerHTML = '';
+      iframeAreaEl.value.style.display = 'none';
+      connectAreaEl.value.style.display = 'none';
+      isConnectLive.value = false;
+      isConnectLiveCall.value = false;
+      isConnectLiveConf.value = false;
+    }
+
+    // admin일때만 버튼 영역보이게 임시 세팅
     const updateType = () => {
       if(userType.value === 'admin'){
         btnAreaEl.value.style.display='block';
@@ -440,10 +395,7 @@ export default {
       userName,
       channelNo,
       userType,
-      socketId,
-      socketId2,
       inputMessage,
-      connected,
       iframeAreaEl,
       connectAreaEl,
       chatPageEl,
@@ -454,7 +406,7 @@ export default {
       inputMessageEl,
       showQuizEl,
       isConnectLive,
-      isConnectLiveOne,
+      isConnectLiveCall,
       isConnectLiveConf,
 
       sendUserName,
@@ -467,12 +419,9 @@ export default {
       freezeFunc,
       getUserFunc,
       connectLiveFunc,
-      connectLiveOneFunc,
-      connectLiveConfFunc,
       updateTyping,
       updateType,
-      connectLiveShowFunc,
-      iframeShowFunc
+
     }
   }
 }
@@ -605,12 +554,13 @@ ul {
 
 .chat.page {
   display: none;
+  flex-direction: column;
 }
 
 /* Font */
 
 .messages {
-  font-size: 150%;
+  font-size: 100%;
 }
 
 .inputMessage {
@@ -627,10 +577,7 @@ ul {
 /* Messages */
 
 .chatArea {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  /*padding-bottom: 60px;*/
+  height: 91%;
 }
 
 .messages {

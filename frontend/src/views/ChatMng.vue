@@ -10,14 +10,14 @@
         </div>
       </div>
       <div class="btnarea" ref="btnAreaEl" style="display: none;">
-<!--        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>-->
+        <!--        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>-->
         <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
         <button type="button" @click="connectLiveFunc('call')">커넥트라이브_call</button>
         <button type="button" @click="connectLiveFunc('cast')">커넥트라이브_cast</button>
         <button type="button" @click="connectLiveFunc('conf')">커넥트라이브_conf</button>
-<!--        <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>-->
+        <!--        <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>-->
         <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
-<!--        <button type="button" @click="getUserFunc">db 회원조회</button>-->
+        <!--        <button type="button" @click="getUserFunc">db 회원조회</button>-->
         <button type="button" class="iframe-hide-btn" @click="hideIframe">화면 초기화</button>
         <button type="button" class="exitButtion" @click="sendDisconnect">퇴장</button>
       </div>
@@ -289,7 +289,7 @@ export default {
         isConnectLiveCast.value = true;
         userData.value.messageType='connectLiveCast'
       }
-      
+
       socket2.emit('message', userData.value);
     }
 

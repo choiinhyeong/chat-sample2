@@ -1,0 +1,64 @@
+20220603 13:24:34 [WHATAP-001] <18636> Start initialize WhaTap Agent...
+20220603 13:24:34 [WHATAP-101] <18636> Finish initialize configuration...
+TypeError: Logger.printError is not a function
+    at Function.License.getKey (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\license.js:29:16)
+    at Object.resetLicense (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:41:31)
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:30:18)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)
+Error: Invalid license
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:36:23)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)
+20220603 13:29:49 [WHATAP-001] <9192> Start initialize WhaTap Agent...
+20220603 13:29:49 [WHATAP-101] <9192> Finish initialize configuration...
+TypeError: Logger.printError is not a function
+    at Function.License.getKey (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\license.js:29:16)
+    at Object.resetLicense (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:41:31)
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:30:18)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)
+Error: Invalid license
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:36:23)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)
+20220603 13:42:46 [WHATAP-001] <19768> Start initialize WhaTap Agent...
+20220603 13:42:46 [WHATAP-101] <19768> Finish initialize configuration...
+TypeError: Logger.printError is not a function
+    at Function.License.getKey (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\license.js:29:16)
+    at Object.resetLicense (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:41:31)
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:30:18)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)
+Error: Invalid license
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:36:23)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)
+20220603 13:46:18 [WHATAP-001] <5540> Start initialize WhaTap Agent...
+20220603 13:46:19 [WHATAP-101] <5540> Finish initialize configuration...
+TypeError: Logger.printError is not a function
+    at Function.License.getKey (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\license.js:29:16)
+    at Object.resetLicense (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:41:31)
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:30:18)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)
+Error: Invalid license
+    at Object.run (C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\net\security-master.js:36:23)
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\core\agent.js:124:30
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:76:24
+    at C:\Users\user\IdeaProjects\chat-sample2\backend\node_modules\whatap\lib\conf\configure.js:205:21
+    at FSReqCallback.oncomplete (fs.js:179:23)

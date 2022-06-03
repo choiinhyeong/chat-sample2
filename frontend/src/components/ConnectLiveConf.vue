@@ -66,6 +66,14 @@ export default {
     const cameraDevices = ref([]);
     const audioCheckInterval = ref(-1);
 
+    const onProvisioning = async() => {
+      await ConnectLive.signIn({
+        serviceId: '2022KBH0C8AZ',
+        serviceKey: '2022KBH0C8AZ42PO',
+        secret: 'w7kvrnnCNVjBzjdR'
+      });
+    };
+
     const onConnect = async() => {
       await onProvisioning();
       await onCreateLocalMedia();
@@ -91,14 +99,6 @@ export default {
       }, 250);
     }
 
-    const onProvisioning = async() => {
-      await ConnectLive.signIn({
-        serviceId: '2022KBH0C8AZ',
-        serviceKey: '2022KBH0C8AZ42PO',
-        secret: 'w7kvrnnCNVjBzjdR'
-      });
-    };
-
     const onCreateLocalMedia = async() => {
       localMedia.value = await ConnectLive.createLocalMedia({
         audio: true,
@@ -106,13 +106,13 @@ export default {
       });
 
       // await onCreateLocalMediaCallback();
-      nextTick(() => {
+      nextTick(async() => {
         const video = localMedia.value.video.attach();
         video.className = 'local-video';
         video.style.width = '100%';
         document.querySelector('.local-container').appendChild(video);
 
-        cameraDevices.value = localMedia.value.getCameraDevices();
+        cameraDevices.value = await localMedia.value.getCameraDevices();
       });
     }
 
@@ -217,7 +217,7 @@ export default {
       localScreen.value = undefined;
     };
 
-    const onChangeCamera= async() => {
+    const onChangeCamera = async() => {
       localMedia.value.video.detach();
 
       const camaraSource = document.getElementById('camaraSource');
@@ -230,8 +230,8 @@ export default {
     };
 
     const onClickSpotlight = async(event) => {
-      console.log('srcObject;;;', document.getElementById('spotlight-video').srcObject);
       const target = event.target;
+      console.log('srcObject;;;', target.srcObject);
       const remoteParticipant = conf.value.remoteParticipants.find(participant => participant.id === target.dataset.participantid);
       if (remoteParticipant) {
         const t = remoteParticipant.getVideo(parseInt(target.dataset.videoid));

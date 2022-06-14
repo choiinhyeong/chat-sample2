@@ -58,22 +58,22 @@ if(process.env.CHAT_ENV === 'prd'){
     redisHost = 'pea-hrd-prd-redis-01-001.xnnhk0.0001.apn2.cache.amazonaws.com'
 }
 
-// if(process.env.SERVER == 'local'){
-//     redisClient = new redis({
-//         port: 6379,
-//         host: redisHost,
-//         connectTimeout: 10000
-//     });
-//     redisStoreHost = redisHost;
-// }else{
-//     redisClient = new redis.Cluster([
-//         {port: 6379, host: redisHost}
-//     ]);
-//     redisStoreHost = redisHost;
-// }
+if(process.env.SERVER == 'local'){
+    redisClient = new redis({
+        port: 6379,
+        host: redisHost,
+        connectTimeout: 10000
+    });
+    redisStoreHost = redisHost;
+}else{
+    redisClient = new redis.Cluster([
+        {port: 6379, host: redisHost}
+    ]);
+    redisStoreHost = redisHost;
+}
 
 // Adapting Redis
-// io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
+io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
 const apiRouter = require('./routes/api') (app,io,redisClient,pool);
 

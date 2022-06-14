@@ -8,19 +8,15 @@
       <div style="width: 100%; height:97%;">
         <div class="iframe-area" ref="iframeAreaEl"></div>
         <div class="connect-area" ref="connectAreaEl" style="display: none;">
-          <ConnectLiveCast v-if="isConnectLiveCast"></ConnectLiveCast>
-          <ConnectLive v-if="isConnectLiveCall"></ConnectLive>
           <ConnectLiveConf v-if="isConnectLiveConf"></ConnectLiveConf>
         </div>
       </div>
       <div class="btnarea" ref="btnAreaEl" style="display: none; height:3%;">
         <!--        <button type="button" class="iframe-btn" @click="showIframe">iframe</button>-->
-        <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>
+<!--        <button type="button" @click="showQuiz" ref="showQuizEl">퀴즈앤</button>-->
 <!--        <button type="button" class="yt-btn" @click="youtubeFunc">유튜브</button>-->
-        <button type="button" @click="connectLiveFunc('call')" style="display: none !important;">커넥트라이브_call</button>
-        <button type="button" @click="connectLiveFunc('cast')" style="display: none !important;">커넥트라이브_cast</button>
-        <button type="button" @click="connectLiveFunc('conf')">커넥트라이브_conf</button>
-        <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>
+        <button type="button" @click="connectLiveFunc">커넥트라이브_conf</button>
+<!--        <button type="button" @click="freezeFunc" ref="freezeEl">채팅잠금</button>-->
         <button type="button" class="iframe-hide-btn" @click="hideIframe">화면 초기화</button>
         <button type="button" class="exitButtion" @click="sendDisconnect">퇴장</button>
       </div>
@@ -44,21 +40,16 @@
 <script>
 import {onMounted, ref} from "vue";
 import io from 'socket.io-client'
-// import ConnectLiveCall from "@/components/ConnectLiveCall";
 import ConnectLiveConf from "@/components/ConnectLiveConf";
-import ConnectLiveCast from "@/components/ConnectLiveCast";
 import {useStore} from "vuex";
 import {ACT_GET_USERS_DECRYPT, ACT_GET_USERS_ENCRYPT} from "@/store/modules/user/users";
-import ConnectLive from "@/components/ConnectLive";
 import {useRoute, useRouter} from "vue-router";
 
 
 export default {
   name: "ChatMng",
   components:{
-    ConnectLiveCast,
     ConnectLiveConf,
-    ConnectLive,
   },
   setup(){
 
@@ -80,8 +71,6 @@ export default {
     const inputMessageEl = ref();
     const showQuizEl = ref();
     const connected = ref(false);
-    const isConnectLiveCast = ref(false);
-    const isConnectLiveCall = ref(false);
     const isConnectLiveConf = ref(false);
 
     onMounted(() => {
@@ -162,6 +151,7 @@ export default {
       li.innerText = data.userName + "("+data.accTy+")님이 \""+data.channelNo+"\"채널에 입장했습니다.";
       messagesEl.value.append(li);
       connected.value = true;
+      getRedisUsersList();
 
       chatPageEl.value.style.display='flex'
       if(data.accTy === 'admin') btnAreaEl.value.style.display='block'
@@ -187,9 +177,8 @@ export default {
       console.log('disconnectCustom--------------', data)
       let li = document.createElement('li')
       li.innerText = data.userinfo.userName + "님이 퇴장하였습니다.";
-      window.localStorage.removeItem('info');
-      connected.value = false;
       messagesEl.value.append(li);
+      getRedisUsersList();
     });
 
     /**
@@ -228,12 +217,6 @@ export default {
           inputMessageEl.value.disabled = false;
           freezeEl.value.innerText = '잠금'
         }
-      }else if(data.messageType === 'connectLiveCast'){
-        isConnectLiveCast.value = true;
-        connectLiveShowFunc();
-      }else if(data.messageType === 'connectLiveCall'){
-        isConnectLiveCall.value = true;
-        connectLiveShowFunc();
       }else if(data.messageType === 'connectLiveConf') {
         isConnectLiveConf.value = true;
         connectLiveShowFunc();
@@ -245,18 +228,9 @@ export default {
     /**
      * 기능 함수들
      */
-    const connectLiveFunc = (type) => {
+    const connectLiveFunc = () => {
       userInfo.value.sendType='message';
-      if(type === 'call'){
-        isConnectLiveCall.value = true;
-        userInfo.value.messageType='connectLiveCall'
-      }else if(type === 'conf'){
-        isConnectLiveConf.value = true;
-        userInfo.value.messageType='connectLiveConf'
-      }else if(type === 'cast'){
-        isConnectLiveCast.value = true;
-        userInfo.value.messageType='connectLiveCast'
-      }
+      userInfo.value.messageType='connectLiveConf'
 
       socket2.emit('message', userInfo.value);
     }
@@ -334,8 +308,6 @@ export default {
       iframeAreaEl.value.innerHTML = '';
       iframeAreaEl.value.style.display = 'none';
       connectAreaEl.value.style.display = 'none';
-      isConnectLiveCast.value = false;
-      isConnectLiveCall.value = false;
       isConnectLiveConf.value = false;
     }
 
@@ -357,6 +329,17 @@ export default {
           }).catch(e => {
         console.error(e);
       });
+    }
+
+    // 레디스에서 회원정보를 가져온다.
+    const getRedisUsersList = () => {
+      // store.dispatch(`users/${ACT_GET_REDIS_USERS_LIST}`, userInfo.value.channelNo)
+      //     .then((res) => {
+      //       console.log('getRedisUsersList====>',res)
+      //       // if (res.status === 200) {}
+      //     }).catch(e => {
+      //   console.error(e);
+      // });
     }
 
     /**
@@ -399,8 +382,6 @@ export default {
       freezeEl,
       inputMessageEl,
       showQuizEl,
-      isConnectLiveCast,
-      isConnectLiveCall,
       isConnectLiveConf,
       userInfo,
 
@@ -416,6 +397,7 @@ export default {
       getUsersDecryptFunc,
       connectLiveFunc,
       updateTyping,
+      getRedisUsersList,
 
       moveFunc,
       connected,

@@ -12,4 +12,5 @@ module.exports = defineConfig({
     }
   },
   outputDir: path.resolve(__dirname, "../backend/public/chat")
+  // outputDir: path.resolve(__dirname, "./dist/chat")
 });

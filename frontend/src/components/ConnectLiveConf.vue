@@ -2,7 +2,6 @@
   <div class="container flex column">
     <header>
       <input type="text" v-model="confName" :disabled="isConnected" />
-      <input type="text" v-model="myId" :disabled="isConnected" />
       <button @click="onConnect" v-if="!isConnected">연결하기</button>
       <button @click="onDisConnectConference" v-if="isConnected">연결해제하기</button>
       <button @click="onCreateLocalScreen" v-if="isConnected && !localScreen">화면공유적용</button>

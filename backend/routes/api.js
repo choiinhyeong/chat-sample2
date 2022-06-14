@@ -4,7 +4,7 @@ moment.tz.setDefault("Asia/Seoul");
 let channelSql = require('../db_mapper/channel.js');
 const crypto = require('../crypto');
 
-module.exports = function(app,io,pool)
+module.exports = function(app, io, redisClient, pool)
 {
     // 사용자 정보 암호화
     app.get('/api/chat/users/encrypt', async function (req, res, next) {
@@ -20,11 +20,25 @@ module.exports = function(app,io,pool)
         res.json(JSON.parse(query));
     });
 
+    //채널에 접속한 사용자 리스트를 제공한다.
+    app.get('/api/chat/redis/userlist/:channelNo', async function (req, res, next) {
+        let channelNo = req.params.channelNo;
+        let arryList = new Array();
+
+        console.log(channelNo);
+        await redisClient.hgetall(channelNo, function(err, obj) {
+            if(err) throw err;
+
+            arryList.push(JSON.stringify(obj));
+        });
+
+        res.json(arryList);
+    });
+
     // 사용자 정보 가져오기
-    app.get('/api/chat/user/:userSn', async function (req, res) {
-        console.log('===============> /get/user',req.params.userSn)
-        let userSn = req.params.userSn;
-        let param = {userSn: userSn};
+    app.get('/api/chat/userlist', async function (req, res) {
+        console.log('===============> /get/userlist',)
+        let param = {};
         pool.getConnection((err, connection) => {
             console.log('getConnection-----------------')
             if ( err ) {

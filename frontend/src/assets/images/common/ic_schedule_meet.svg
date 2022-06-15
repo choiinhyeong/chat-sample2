@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="25.5px" height="25.5px" viewBox="0 0 25.5 25.5" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <g id="Ic--시간표--대면" transform="translate(0.75 0.75)">
+    <g id="User,Profile.15">
+      <g id="Group" transform="translate(3.00006 3)">
+        <path d="M15.3639 2.63604C18.8787 6.15076 18.8787 11.8492 15.3639 15.3639C11.8492 18.8787 6.15074 18.8787 2.63604 15.3639C-0.87868 11.8492 -0.87868 6.15074 2.63604 2.63604C6.15076 -0.87868 11.8492 -0.87868 15.3639 2.63604" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M10.989 5.32391C12.0876 6.42245 12.0876 8.20355 10.989 9.30209C9.8905 10.4006 8.1094 10.4006 7.01086 9.30209C5.91232 8.20355 5.91232 6.42245 7.01086 5.32391C8.1094 4.22537 9.8905 4.22537 10.989 5.32391" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M14.7069 15.958C13.2719 14.447 11.2479 13.5 8.99994 13.5C6.75194 13.5 4.72794 14.447 3.29294 15.959" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <path d="M0 0L24 0L24 24L0 24L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+    </g>
+    <path d="M0 0L24 0L24 24L0 24L0 0Z" id="Rectangle" fill="none" fill-rule="evenodd" stroke="none" />
+  </g>
+</svg>

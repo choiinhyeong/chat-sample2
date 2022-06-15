@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.9882353 0 0 0 0 0.9882353 0 0 0 0 0.9882353 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="Ic--Like" filter="url(#filter_1)">
+    <path d="M0 0L32 0L32 32L0 32L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+    <path d="M16 7.61467C16.9187 6.54 18.508 5.33333 20.928 5.33333C25.16 5.33333 28 9.30667 28 13.0067C28 20.7413 18.3707 26.6667 16 26.6667C13.6293 26.6667 4 20.7413 4 13.0067C4 9.30667 6.84 5.33333 11.072 5.33333C13.492 5.33333 15.0813 6.54 16 7.61467Z" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>

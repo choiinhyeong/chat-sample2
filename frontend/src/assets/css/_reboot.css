@@ -1,0 +1,354 @@
+
+:root {
+    --kb-white: #fff;
+    --kb-black: #151515;
+    --kb-red:#ff3500;
+    --kb-yellow:#FFBC00;
+    --kb-yellow-negative:#FFCC00;
+    --kb-brown:#60584C;
+    --kb-dark-brown: #545045;
+    --kb-gold: #8D744A;
+    --kb-silver: #84888B;
+    --kb-light-silver: #E8E8E8;
+    --kb-background-brown: #F7F4F0;
+    --kb-background-dark-brown: #323232;
+
+    --kb-primary:var(--kb-yellow);
+    --kb-secondary:var(--kb-yellow);
+
+    --kb-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --kb-font-KBFGDisplay: 'KBFGDisplay',-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Malgun Gothic";
+    --kb-font-KBFGDisplayB: 'KBFGDisplayB',-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Malgun Gothic";
+    --kb-font-KBFGText: 'KBFGText',-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Malgun Gothic";
+    --kb-font-KBFGTextB: 'KBFGTextM',-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Malgun Gothic";
+    --kb-font-KBFGTextM: 'KBFGTextM',-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Malgun Gothic";
+    --kb-font-NewYork: 'NewYork',-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Malgun Gothic";
+
+
+    --kb-body14-font: normal 14px/18px var(--kb-font-KBFGText);
+    --kb-body14-fontB: normal 14px/18px var(--kb-font-KBFGTextB);
+    --kb-body16-font: normal 16px/20px var(--kb-font-KBFGText);
+    --kb-body16-fontB: normal 16px/20px var(--kb-font-KBFGTextB);
+    --kb-body20-font: normal 20px/25px var(--kb-font-KBFGText);
+    --kb-body20-fontB: normal 20px/25px var(--kb-font-KBFGTextB);
+
+    --kb-display16-font: normal 16px/20px var(--kb-font-KBFGDisplay);
+    --kb-display16-fontB: normal 16px/20px var(--kb-font-KBFGDisplayB);
+    --kb-display20-font: normal 20px/25px var(--kb-font-KBFGDisplay);
+    --kb-display20-fontB: normal 20px/25px var(--kb-font-KBFGDisplayB);
+
+    --kb-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    --kb-body-font-family: var(--kb-font-sans-serif);
+    --kb-body-font-size: 1rem;
+    --kb-body-font-weight: 400;
+    --kb-body-line-height: 1.5;
+    --kb-body-color: #212529;
+    --kb-body-bg: #fff;
+
+    --kb-border-color: var(--kb-light-silver);
+    --kb-border-radius: 8px;
+    --kb-border-radius-lg: 16px;
+    --kb-border-radius-xl: 24px;
+    --kb-border-radius-pill: 50rem;
+    --kb-border-radius-circle: 50%;
+
+    --kb-btn-transition: color .3s ease-in-out,background-color .3s ease-in-out,border-color .3s ease-in-out,box-shadow .3s ease-in-out;
+    --kb-input-transition: border-color .3s ease-in-out, box-shadow .3s ease-in-out;
+    --kb-dropdown-transition: transform .3s ease-in-out, opacity .3s ease-in-out;
+    --kb-collapse-transition: max-height .3s ease-in-out, opacity .3s ease-in-out;
+    --kb-text-transition: color .18s ease-in-out;
+    --kb-image-transition: transform .3s ease-in-out;
+    --kb-header-subnav-transition: var(--kb-dropdown-transition);
+    --kb-modal-transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+    --kb-popup-transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+
+    --kb-zindex-header:  var(--kb-zindex-sticky);
+    --kb-zindex-header-nav:  var(--kb-zindex-fixed);
+    --kb-zindex-header-subnav:  var(--kb-zindex-fixed);
+    --kb-zindex-dropdown:  1000;
+    --kb-zindex-sticky: 1020;
+    --kb-zindex-fixed: 1030;
+    --kb-zindex-offcanvas: 1040;
+    --kb-zindex-modal-backdrop: 1050;
+    --kb-zindex-modal: 1060;
+    --kb-zindex-popover: 1070;
+    --kb-zindex-tooltip: 1080;
+
+    --kb-spacer:1rem;
+    --kb-spacer-0:0;
+    --kb-spacer-1:calc(1rem / 4); /* 4 */
+    --kb-spacer-2:calc(1rem / 2); /* 8 */
+    --kb-spacer-3:1rem; /* 16 */
+    --kb-spacer-4:calc(1rem * 1.5); /* 24 */
+    --kb-spacer-5:calc(1rem * 2); /* 32 */
+    --kb-spacer-6:calc(1rem * 2.5); /* 40 */
+    --kb-spacer-7:calc(1rem * 3); /* 48 */
+
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+    :root {
+        scroll-behavior: smooth;
+    }
+}
+
+
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body {width:100%;}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font-family:var(--kb-font-KBFGText);
+    font-size:100%;
+    line-height:1;
+    vertical-align: top;
+    color:#151515;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+}
+thead, tbody, tfoot { vertical-align: middle } /* add this rule*/
+td, th, tr { vertical-align: inherit } /* add this rule */
+
+label {
+    display: inline-block;
+}
+
+button {
+    border-radius: 0;
+    border:0;
+    background:0;
+    padding:0;
+    margin:0;
+    border-width:0px
+}
+button:focus:not(:focus-visible) {
+    outline: 0;
+}
+
+input,
+button,
+select,
+optgroup,
+textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+button,
+select {
+    text-transform: none;
+}
+
+[role=button] {
+    cursor: pointer;
+}
+
+select {
+    word-wrap: normal;
+}
+select:disabled {
+    opacity: 1;
+}
+
+[list]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+button,
+[type=button],
+[type=reset],
+[type=submit] {
+    -webkit-appearance: button;
+}
+button:not(:disabled),
+[type=button]:not(:disabled),
+[type=reset]:not(:disabled),
+[type=submit]:not(:disabled) {
+    cursor: pointer;
+}
+
+::-moz-focus-inner {
+    padding: 0;
+    border-style: none;
+}
+
+textarea {
+    resize: vertical;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: calc(1.275rem + 0.3vw);
+    line-height: inherit;
+}
+@media (min-width: 1200px) {
+    legend {
+        font-size: 1.5rem;
+    }
+}
+legend + * {
+    clear: left;
+}
+
+em {font-style:normal}
+
+
+::-webkit-datetime-edit-fields-wrapper,
+::-webkit-datetime-edit-text,
+::-webkit-datetime-edit-minute,
+::-webkit-datetime-edit-hour-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-year-field {
+    padding: 0;
+}
+
+::-webkit-inner-spin-button {
+    height: auto;
+}
+
+[type=search] {
+    outline-offset: -2px;
+    -webkit-appearance: textfield;
+}
+
+/* rtl:raw:
+[type="tel"],
+[type="url"],
+[type="email"],
+[type="number"] {
+  direction: ltr;
+}
+*/
+::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+::-webkit-file-upload-button {
+    font: inherit;
+}
+
+::file-selector-button {
+    font: inherit;
+}
+
+::-webkit-file-upload-button {
+    font: inherit;
+    -webkit-appearance: button;
+}
+
+output {
+    display: inline-block;
+}
+
+iframe {
+    border: 0;
+}
+
+summary {
+    display: list-item;
+    cursor: pointer;
+}
+
+progress {
+    vertical-align: baseline;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+a {
+    text-decoration:none;
+    color:inherit;
+    transition-property:color, background-color, text-decoration-color, border-color;
+    transition-duration:.18s;
+}
+button {
+    transition-property:color, background-color, border-color;
+    transition-duration:.18s;
+
+}
+
+
+button,input {background-color:transparent;border-color:transparent;}
+a {background-color:transparent;}
+
+a, abbr, address, article, aside, audio, b, blockquote, body, br, button, canvas, caption, cite, code, col, data, datalist, dd, del, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hr, html, i, iframe, img, input, ins, kbd, label, legend, li, main, mark, meter, nav, object, ol, output, p, pre, progress, q, s, samp, section, select, small, span, strong, sub, sup, table, td, textarea, th, time, u, ul, var, video {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;-webkit-tap-highlight-color: transparent;}
+
+strong, b {font-weight:normal}

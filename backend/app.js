@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-WhatapAgent = require('whatap').NodeAgent;
+// WhatapAgent = require('whatap').NodeAgent;
 
 app.use(cors());
 const dotenv = require('dotenv');
@@ -53,11 +53,20 @@ console.log("process.env.SERVER : " , process.env.SERVER);
 
 let redisClient = null;
 let redisStoreHost = null;
-let redisHost = 'pea-hrd-dev-redis.o88ccj.0001.apn2.cache.amazonaws.com'
-if(process.env.CHAT_ENV === 'prd'){
-    redisHost = 'pea-hrd-prd-redis-01-001.xnnhk0.0001.apn2.cache.amazonaws.com'
-}
 
+/*
+*  내부 레디스주소 나중에 env로 빼기
+* */
+// let redisHost = 'pea-hrd-dev-redis.o88ccj.0001.apn2.cache.amazonaws.com'
+// if(process.env.CHAT_ENV === 'prd'){
+//     redisHost = 'pea-hrd-prd-redis-01-001.xnnhk0.0001.apn2.cache.amazonaws.com'
+// }
+
+// 외부 레디스 주소
+let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+if(process.env.CHAT_ENV === 'prd'){
+    redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+}
 if(process.env.SERVER == 'local'){
     redisClient = new redis({
         port: 6379,
@@ -71,7 +80,6 @@ if(process.env.SERVER == 'local'){
     ]);
     redisStoreHost = redisHost;
 }
-
 // Adapting Redis
 io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
@@ -92,7 +100,7 @@ io.on('connection', (socket) => {
             socketId : socket.id,
             channelNo : data.channelNo,
             lrnerId: data.lrnerId,
-            userName : data.userName,
+            lrnerName : data.lrnerName,
             connectDate : connectDate
         }
 
@@ -156,8 +164,8 @@ io.on('connection', (socket) => {
 
 io2.on('connection', (socket) => {
 
-    socket.on('message_channel_connection', async (data) => {
-        console.log('==============================>io2 message_channel_connection',data);
+    socket.on('domSocket_channel_connection', async (data) => {
+        console.log('==============================>domSocket_channel_connection',data);
         socket.leave(socket.id);
         socket.join(data.channelNo);
 
@@ -166,7 +174,7 @@ io2.on('connection', (socket) => {
             socketId2 : socket.id,
             channelNo : data.channelNo,
             lrnerId: data.lrnerId,
-            userName : data.userName,
+            lrnerName : data.lrnerName,
             connectDate : connectDate
         }
 
@@ -178,12 +186,12 @@ io2.on('connection', (socket) => {
             await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
         }
 
-        io2.to(data.channelNo).emit('message_channel_connection', data);
+        io2.to(data.channelNo).emit('domSocket_channel_connection', data);
 
     });
 
     socket.on('message', async (data) => {
-        console.log('==============================>io2 message');
+        console.log('==============================>domSocket message');
         console.log(data);
 
         const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -195,7 +203,7 @@ io2.on('connection', (socket) => {
     });
 
     socket.on('disconnect', async () => {
-        console.log('--------------io2 disconnect--------------------');
+        console.log('--------------domSocket disconnect--------------------');
         console.log(socket.userInfo);
 
         if(socket.userInfo != undefined){
@@ -211,19 +219,19 @@ io2.on('connection', (socket) => {
 
     });
     socket.on('forceDisconnect', function() {
-        console.log('io2 -----------------------------------');
+        console.log('domSocket forceDisconnect -----------------------------------');
         io2.to(socket.userInfo.channelNo).emit('disconnectCustom', socket.userInfo);
     })
 
 
     socket.on('disconnectCustom',async () => {
-        console.log('==============================>io2 disconnectCustom');
+        console.log('==============================>domSocket disconnectCustom');
         // io2.to(socket.userInfo.channelNo).emit('disconnectCustom');
     });
 
 
     socket.on('leave', (data) => {
-        console.log('--------------leave--------------------');
+        console.log('--------------domSocket leave--------------------');
         console.log('user leave', data);
     });
 

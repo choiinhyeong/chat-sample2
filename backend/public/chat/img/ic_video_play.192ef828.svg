@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="88px" height="88px" viewBox="0 0 88 88" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" id="filter_1">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+      <feGaussianBlur stdDeviation="8" result="effect0_gaussianBlur" />
+    </filter>
+    <path d="M20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.9543 0 0 8.9543 0 20C0 31.0457 8.9543 40 20 40Z" id="path_1" />
+    <clipPath id="mask_1">
+      <use xlink:href="#path_1" />
+    </clipPath>
+  </defs>
+  <g id="Ic--Background--Play" transform="translate(24 24)">
+    <path d="M14.4 14.1039L14.4 25.8966C14.4 27.507 16.0695 28.5189 17.414 27.7221L27.3794 21.8268C28.7403 21.0228 28.7403 18.979 27.3789 18.1747L17.4136 12.2767C16.0683 11.482 14.4 12.4941 14.4 14.1039Z" id="Path" fill="#FFFFFF" fill-rule="evenodd" stroke="none" />
+  </g>
+  <use xlink:href="#Ic / Background / Play" filter="url(#filter_1)" clip-path="url(#mask_1)" />
+</svg>

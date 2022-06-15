@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
+    </filter>
+    <filter id="filter_2">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.32941177 0 0 0 0 0.3137255 0 0 0 0 0.27058825 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="Ic--Folder-Copy" transform="translate(1 1)" opacity="0.5" filter="url(#filter_2)">
+    <g id="Ic--Download" filter="url(#filter_1)">
+      <path d="M24 24L0 24L0 0L24 0L24 24Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+      <path d="M12.0009 4C12.5137 4 12.9364 4.38604 12.9942 4.88338L13.0009 5L13.0009 14.5991C13.0009 15.1513 12.5532 15.5991 12.0009 15.5991C11.4881 15.5991 11.0654 15.213 11.0076 14.7157L11.0009 14.5991L11.0009 5C11.0009 4.44772 11.4486 4 12.0009 4Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="none" />
+      <path d="M7.6418 10.2479C8.00195 9.88705 8.56916 9.85881 8.96173 10.1635L9.05601 10.2466L12.001 13.186L14.9458 10.2466C15.3066 9.88642 15.8739 9.85921 16.2659 10.1646L16.36 10.2479C16.7202 10.6087 16.7474 11.1759 16.442 11.5679L16.3587 11.6621L12.7074 15.3068C12.347 15.6665 11.7806 15.6942 11.3886 15.3898L11.2944 15.3068L7.64308 11.6621C7.2522 11.2719 7.25163 10.6387 7.6418 10.2479Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="none" />
+      <path d="M15 17.5C15.5523 17.5 16 17.9477 16 18.5C16 19.0128 15.614 19.4355 15.1166 19.4933L15 19.5L9 19.5C8.44771 19.5 8 19.0523 8 18.5C8 17.9872 8.38604 17.5645 8.88338 17.5067L9 17.5L15 17.5Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="none" />
+    </g>
+  </g>
+</svg>

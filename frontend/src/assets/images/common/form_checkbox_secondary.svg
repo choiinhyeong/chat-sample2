@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.5176471 0 0 0 0 0.53333336 0 0 0 0 0.54509807 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="Ic--Check" filter="url(#filter_1)">
+    <path d="M24 12C24 18.6274 18.6274 24 12 24C5.37258 24 0 18.6274 0 12C0 5.37258 5.37258 0 12 0C18.6274 0 24 5.37258 24 12ZM16.6568 8.24589C16.2403 7.88318 15.6086 7.92677 15.2459 8.34325L10.682 13.583L8.66238 11.7977L8.56324 11.7204C8.15297 11.4401 7.58851 11.5025 7.25083 11.8845C6.88501 12.2982 6.92387 12.9302 7.33762 13.296L10.1122 15.7492L10.2119 15.8268C10.6244 16.1083 11.1921 16.0432 11.5287 15.6568L16.7541 9.65675L16.8306 9.55704C17.1079 9.14468 17.0412 8.58071 16.6568 8.24589Z" id="Combined-Shape" fill="#FFCC00" fill-rule="evenodd" stroke="none" />
+  </g>
+</svg>

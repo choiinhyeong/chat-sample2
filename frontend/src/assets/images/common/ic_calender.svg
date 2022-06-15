@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <g id="Ic--Calendar">
+    <path d="M0 0L32 0L32 32L0 32L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+    <g id="icon_gnb_calendar" transform="translate(2.6666667 2.6666667)">
+      <g id="Group" transform="translate(3.3333335 3.5555522)">
+        <path d="M14.4444 0L14.4444 4.44444" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5.55556 0L5.55556 4.44444" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M0 7.77778L20 7.77778" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M17.7777 2.22222L2.22223 2.22222C0.994444 2.22222 0 3.21667 0 4.44445L0 18.8889C0 20.1166 0.994444 21.1112 2.22223 21.1112L17.7777 21.1112C19.0056 21.1112 20 20.1166 20 18.8889L20 4.44445C20 3.21667 19.0056 2.22222 17.7777 2.22222Z" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <path d="M0 0L26.6667 0L26.6667 26.6667L0 26.6667L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+    </g>
+  </g>
+</svg>

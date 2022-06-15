@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="25.5px" height="25.5px" viewBox="0 0 25.5 25.5" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <g id="Ic--Eyes-Copy" transform="translate(0.75 0.75)">
+    <g id="Play">
+      <path d="M0 0L24 0L24 24L0 24L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+      <path d="M21 12L21 12C21 16.971 16.971 21 12 21L12 21C7.029 21 3 16.971 3 12L3 12C3 7.029 7.029 3 12 3L12 3C16.971 3 21 7.029 21 12Z" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M10.941 9.058L14.823 11.354C15.314 11.644 15.314 12.355 14.823 12.645L10.941 14.941C10.441 15.237 9.809 14.876 9.809 14.295L9.809 9.704C9.809 9.123 10.441 8.762 10.941 9.058L10.941 9.058Z" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</svg>

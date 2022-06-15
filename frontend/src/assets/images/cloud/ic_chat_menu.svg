@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="21.25px" height="21.25px" viewBox="0 0 21.25 21.25" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="dots-menu" transform="translate(0.625 0.625)" filter="url(#filter_1)">
+    <path d="M15.4167 10C15.4167 10.2301 15.2301 10.4167 15 10.4167C14.7699 10.4167 14.5833 10.2301 14.5833 10C14.5833 9.76988 14.7699 9.58333 15 9.58333C15.2301 9.58333 15.4167 9.76988 15.4167 10" id="Path" fill="none" fill-rule="evenodd" stroke="#323232" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M10.4167 10C10.4167 10.2301 10.2301 10.4167 10 10.4167C9.76988 10.4167 9.58333 10.2301 9.58333 10C9.58333 9.76988 9.76988 9.58333 10 9.58333C10.2301 9.58333 10.4167 9.76988 10.4167 10" id="Path" fill="none" fill-rule="evenodd" stroke="#323232" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M5.41667 10C5.41667 10.2301 5.23012 10.4167 5 10.4167C4.76988 10.4167 4.58333 10.2301 4.58333 10C4.58333 9.76988 4.76988 9.58333 5 9.58333C5.23012 9.58333 5.41667 9.76988 5.41667 10" id="Path" fill="none" fill-rule="evenodd" stroke="#323232" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M20 0L20 20L0 20L0 0L20 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="20.5px" height="20.5px" viewBox="0 0 20.5 20.5" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.5529412 0 0 0 0 0.45490196 0 0 0 0 0.2901961 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="Ic--Arrow" transform="matrix(-1 0 0 1 20.25 0.25)">
+    <g id="Ic--Arrow" filter="url(#filter_1)">
+      <path d="M20 0L0 0L0 20L20 20L20 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+      <path d="M6.66667 3.33333L14.1667 3.33333L14.1667 16.6667L6.66667 16.6667L6.66667 3.33333Z" id="button-area" fill="#FFFFFF" fill-opacity="0.011764706" fill-rule="evenodd" stroke="none" />
+      <path d="M8.47733 10L13.197 5.3386C13.4899 5.04932 13.4899 4.58031 13.197 4.29103C12.9041 4.00175 12.4292 4.00175 12.1363 4.29103L6.88634 9.47622C6.59344 9.76549 6.59344 10.2345 6.88634 10.5238L12.1363 15.709C12.4292 15.9982 12.9041 15.9982 13.197 15.709C13.4899 15.4197 13.4899 14.9507 13.197 14.6614L8.47733 10Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="#000000" stroke-width="0.5" />
+    </g>
+  </g>
+</svg>

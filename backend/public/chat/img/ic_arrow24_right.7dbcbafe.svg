@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.08235294 0 0 0 0 0.08235294 0 0 0 0 0.08235294 0 0 0 1 0" />
+    </filter>
+    <rect width="24" height="24" id="artboard_1" />
+    <clipPath id="clip_1">
+      <use xlink:href="#artboard_1" clip-rule="evenodd" />
+    </clipPath>
+  </defs>
+  <g id="Ic--Arrow" clip-path="url(#clip_1)" transform="matrix(-1 0 0 1 24.5 0.5)">
+    <g id="Ic--Arrow" filter="url(#filter_1)">
+      <path d="M24 0L0 0L0 24L24 24L24 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+      <path d="M8 4L17 4L17 20L8 20L8 4Z" id="button-area" fill="#FFFFFF" fill-opacity="0.011764706" fill-rule="evenodd" stroke="none" />
+      <path d="M10.1728 12L15.8364 6.40632C16.1879 6.05918 16.1879 5.49637 15.8364 5.14924C15.4849 4.80211 14.9151 4.80211 14.5636 5.14924L8.2636 11.3715C7.91213 11.7186 7.91213 12.2814 8.2636 12.6285L14.5636 18.8508C14.9151 19.1979 15.4849 19.1979 15.8364 18.8508C16.1879 18.5036 16.1879 17.9408 15.8364 17.5937L10.1728 12Z" id="Path" fill="#000000" stroke="#000000" stroke-width="1" />
+    </g>
+  </g>
+</svg>

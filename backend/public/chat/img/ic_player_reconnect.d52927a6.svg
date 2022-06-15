@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.9098039 0 0 0 0 0.9098039 0 0 0 0 0.9098039 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="ArrowCounterClockwise" transform="translate(1 1)" filter="url(#filter_1)">
+    <path d="M0 0L18 0L18 18L0 18L0 0Z" id="Rectangle" fill="none" fill-rule="evenodd" stroke="none" />
+    <path d="M5.61326 7.01128L2.23826 7.01128L2.23826 3.63628" id="Path" fill="none" fill-rule="evenodd" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M4.62478 13.3752C7.04115 15.7916 10.9589 15.7916 13.3752 13.3752C15.7916 10.9589 15.7916 7.04115 13.3752 4.62478C10.9589 2.20841 7.04115 2.20841 4.62478 4.62478L2.23829 7.01126" id="Path" fill="none" fill-rule="evenodd" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="35px" height="35px" viewBox="0 0 35 35" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
+    </filter>
+    <filter id="filter_2">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.32941177 0 0 0 0 0.3137255 0 0 0 0 0.27058825 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="Ic--팔로우" transform="translate(1.5 1.5)" filter="url(#filter_2)">
+    <g id="Ic--Download" filter="url(#filter_1)">
+      <path d="M32 32L0 32L0 0L32 0L32 32Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+      <path d="M16.0012 5.33333C16.685 5.33333 17.2485 5.84805 17.3256 6.51117L17.3345 6.66667L17.3345 19.4654C17.3345 20.2018 16.7376 20.7987 16.0012 20.7987C15.3174 20.7987 14.7539 20.284 14.6768 19.6209L14.6679 19.4654L14.6679 6.66667C14.6679 5.93029 15.2648 5.33333 16.0012 5.33333Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="none" />
+      <path d="M10.1891 13.6638C10.6693 13.1827 11.4255 13.1451 11.949 13.5513L12.0747 13.6621L16.0013 17.5813L19.9277 13.6621C20.4088 13.1819 21.1652 13.1456 21.6878 13.5528L21.8133 13.6638C22.2936 14.1449 22.3298 14.9012 21.9227 15.4239L21.8116 15.5494L16.9432 20.4091C16.4627 20.8887 15.7075 20.9256 15.1848 20.5197L15.0593 20.4091L10.1908 15.5494C9.6696 15.0292 9.66883 14.185 10.1891 13.6638Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="none" />
+      <path d="M20 23.3333C20.7364 23.3333 21.3333 23.9303 21.3333 24.6667C21.3333 25.3504 20.8186 25.914 20.1555 25.991L20 26L12 26C11.2636 26 10.6667 25.403 10.6667 24.6667C10.6667 23.9829 11.1814 23.4193 11.8445 23.3423L12 23.3333L20 23.3333Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="none" />
+    </g>
+  </g>
+</svg>

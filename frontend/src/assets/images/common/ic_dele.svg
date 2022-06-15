@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" id="filter_1">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+      <feGaussianBlur stdDeviation="4" result="effect0_gaussianBlur" />
+    </filter>
+    <path d="M10 20C15.5228 20 20 15.5228 20 10C20 4.47715 15.5228 0 10 0C4.47715 0 0 4.47715 0 10C0 15.5228 4.47715 20 10 20Z" id="path_1" />
+    <clipPath id="mask_1">
+      <use xlink:href="#path_1" />
+    </clipPath>
+  </defs>
+  <g id="Group" transform="translate(12 12)">
+    <g id="Ic--Background--Close">
+      <g id="Group">
+        <use xlink:href="#Group" filter="url(#filter_1)" clip-path="url(#mask_1)" />
+        <path d="M10.7071 10L13.182 7.52513L12.4749 6.81802L10 9.29289L7.52513 6.81802L6.81802 7.52513L9.29289 10L6.81802 12.4749L7.52513 13.182L10 10.7071L12.4749 13.182L13.182 12.4749L10.7071 10Z" id="Combined-Shape" fill="#FFFFFF" fill-rule="evenodd" stroke="#FFFFFF" stroke-width="0.5" />
+      </g>
+    </g>
+  </g>
+</svg>

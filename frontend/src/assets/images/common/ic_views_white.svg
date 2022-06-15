@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.9882353 0 0 0 0 0.9882353 0 0 0 0 0.9882353 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="Ic--Eyes" transform="translate(1 1)">
+    <g id="Group-2" filter="url(#filter_1)">
+      <path d="M0 0L24 0L24 24L0 24L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+      <path d="M2.15083 12.5363C1.94972 12.2078 1.94972 11.7922 2.15083 11.4637C4.26744 7.99277 8.134 5 12.0006 5C15.8671 5 19.7326 7.99277 21.8492 11.4626C22.0503 11.7922 22.0503 12.2089 21.8492 12.5385C19.7326 16.0072 15.8671 19 12.0006 19C8.134 19 4.26744 16.0072 2.15083 12.5363Z" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M14.3572 9.71585C15.6593 10.978 15.6593 13.0231 14.3572 14.2852C13.055 15.5474 10.945 15.5474 9.64284 14.2852C8.34066 13.0231 8.34066 10.978 9.64284 9.71585C10.945 8.45369 13.0561 8.45369 14.3572 9.71585" id="Path" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+</svg>

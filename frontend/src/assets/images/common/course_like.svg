@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="88px" height="88px" viewBox="0 0 88 88" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" id="filter_1">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+      <feGaussianBlur stdDeviation="8" result="effect0_gaussianBlur" />
+    </filter>
+    <filter id="filter_2">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" />
+    </filter>
+    <path d="M34.1421 5.85787C41.9526 13.6684 41.9526 26.3317 34.1421 34.1421C26.3316 41.9526 13.6683 41.9526 5.85787 34.1421C-1.95262 26.3316 -1.95262 13.6683 5.85787 5.85787C13.6684 -1.95262 26.3317 -1.95262 34.1421 5.85787" id="path_1" />
+    <clipPath id="mask_1">
+      <use xlink:href="#path_1" />
+    </clipPath>
+  </defs>
+  <g id="Ic--Like" transform="translate(24 24)">
+    <g id="Group">
+      <g id="star-checkmark">
+        <g id="Fill">
+          <use xlink:href="#Fill" filter="url(#filter_1)" clip-path="url(#mask_1)" />
+        </g>
+        <g id="star-checkmark" transform="translate(8 8)" filter="url(#filter_2)">
+          <path d="M0 0L24 0L24 24L0 24L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+          <path d="M7.45811 19.86L7.45811 19.86C6.87407 20.1733 6.14668 19.9538 5.83341 19.3697C5.70711 19.1343 5.66301 18.8634 5.7081 18.6L6.5761 13.577L2.9001 10.018L2.9001 10.018C2.42757 9.55331 2.42122 8.79353 2.88591 8.321C3.06948 8.13434 3.30905 8.01283 3.5681 7.975L8.6501 7.242L10.9201 2.668L10.9201 2.668C11.2192 2.07043 11.9462 1.8285 12.5437 2.12764C12.7775 2.24466 12.9671 2.43424 13.0841 2.668L15.3541 7.242L20.4361 7.975L20.4361 7.975C21.0919 8.07076 21.5459 8.68002 21.4501 9.33581C21.4123 9.59486 21.2908 9.83443 21.1041 10.018L17.4261 13.575L18.2941 18.598L18.2941 18.598C18.4072 19.251 17.9694 19.8721 17.3164 19.9851C17.0522 20.0309 16.7803 19.9868 16.5441 19.86L12.0001 17.491L7.45811 19.86Z" id="Path" fill="#000000" fill-rule="evenodd" stroke="none" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

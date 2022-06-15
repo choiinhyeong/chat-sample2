@@ -120,7 +120,11 @@ export const dateToDateFormat = (d, format) => {
     time = hh + '' + min;
   }else if(format === 'hh:mm(A)'){
     time = h + ':' + min + '(' + ampm + ')';
-  }else {
+  }else if(format === '(A) hh:mm'){
+    if(ampm === 'AM') ampm = '오전';
+    else ampm = '오후';
+    time = ampm + h + ':' + min;
+  } else{
     time = yyyy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ' ' + ampm;
   }
   return time;

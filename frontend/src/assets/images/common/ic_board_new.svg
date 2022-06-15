@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1 0 0 0 0 0.7372549 0 0 0 0 0 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="Ic--New">
+    <path d="M0 0L24 0L24 24L0 24L0 0Z" id="Area" fill="none" fill-rule="evenodd" stroke="none" />
+    <g id="New" transform="translate(3 3)" filter="url(#filter_1)">
+      <path d="M18 9C18 13.9706 13.9706 18 9 18C4.02944 18 0 13.9706 0 9C0 4.02944 4.02944 0 9 0C13.9706 0 18 4.02944 18 9ZM7.23167 5.47007C6.77808 5.00501 5.95 5.31528 5.95 6L5.95 12L5.95685 12.1018C6.00651 12.4678 6.3203 12.75 6.7 12.75L6.80177 12.7432C7.16785 12.6935 7.45 12.3797 7.45 12L7.449 8.25L10.6 12.45L10.6683 12.5299C11.1219 12.995 11.95 12.6847 11.95 12L11.95 6L11.9432 5.89823C11.8935 5.53215 11.5797 5.25 11.2 5.25L11.0982 5.25685C10.7322 5.30651 10.45 5.6203 10.45 6L10.449 9.75L7.3 5.55L7.23167 5.47007Z" id="Combined-Shape" fill="#151515" fill-rule="evenodd" stroke="none" />
+    </g>
+  </g>
+</svg>

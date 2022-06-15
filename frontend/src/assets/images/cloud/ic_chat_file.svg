@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="21.25px" height="21.25px" viewBox="0 0 21.25 21.25" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter_1">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" />
+    </filter>
+  </defs>
+  <g id="document-file-blank" transform="translate(0.625 0.625)" filter="url(#filter_1)">
+    <path d="M0 0L20 0L20 20L0 20L0 0Z" id="Path" fill="none" fill-rule="evenodd" stroke="none" />
+    <path d="M5.83333 17.5L14.1667 17.5C15.5474 17.5 16.6667 16.3807 16.6667 15L16.6667 6.97639C16.6667 6.31335 16.4033 5.67747 15.9344 5.20862L13.958 3.23223C13.4892 2.76339 12.8533 2.5 12.1903 2.5L5.83333 2.5C4.45262 2.5 3.33333 3.61929 3.33333 5L3.33333 15C3.33333 16.3807 4.45262 17.5 5.83333 17.5Z" id="Path" fill="none" fill-rule="evenodd" stroke="#323232" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M16.6667 7.08333L13.75 7.08333C12.8295 7.08333 12.0833 6.33714 12.0833 5.41667L12.0833 2.5" id="Path" fill="none" fill-rule="evenodd" stroke="#323232" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>

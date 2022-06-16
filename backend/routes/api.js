@@ -22,17 +22,18 @@ module.exports = function(app, io, redisClient, pool)
 
     //채널에 접속한 사용자 리스트를 제공한다.
     app.get('/api/chat/redis/userlist/:channelNo', async function (req, res, next) {
+        console.log('redis channel ====> ',req.params.channelNo);
         let channelNo = req.params.channelNo;
-        let arryList = new Array();
+        let arrayList = new Array();
 
-        console.log(channelNo);
-        await redisClient.hgetall(channelNo, function(err, obj) {
-            if(err) throw err;
-
-            arryList.push(JSON.stringify(obj));
-        });
-
-        res.json(arryList);
+        if(redisClient !== null){
+            await redisClient.hgetall(channelNo, function(err, obj) {
+                if(err) throw err;
+                console.log('redis users count apu ======> ',arrayList)
+                arrayList.push(JSON.stringify(obj));
+            });
+        }
+        res.json(arrayList);
     });
 
     // 사용자 정보 가져오기

@@ -6,27 +6,30 @@
         <!-- cloud-header -->
         <header class="cloud-header">
           <div class="header-column header-title">
-            <h2 class="title">클라우드</h2>
+            <a href="javascript:" @click=menuCompHideFunc><h2 class="title">클라우드</h2></a>
             <div class="badge-now">NOW</div>
           </div>
           <div class="header-column header-subtitle">
-            <h3 class="title">[KB ACE Academy] 자산관리 STEP Ⅳ</h3>
-            <p class="text">외환 상품/서비스(2022.10.13. 11:00~11:50)</p>
+<!--            <h3 class="title">[KB ACE Academy] 자산관리 STEP Ⅳ</h3>-->
+<!--            <p class="text">외환 상품/서비스(2022.10.13. 11:00~11:50)</p>-->
           </div>
           <div class="header-column header-util">
             <div class="util-status">
-              <span class="text">02:14  학습중</span>
+<!--              <span class="text">02:14  학습중</span>-->
             </div>
             <div class="util-my">
               <span class="text">{{userInfo.lrnerNm}}</span>
               <div class="my-avatar">
-                <img src="../assets/images/@tmp/@tmp_mypage_avatar.jpg" alt="임시이미지" />
+                <ChatProfileImage :target="userInfo.lrnerId"></ChatProfileImage>
               </div>
             </div>
           </div>
         </header>
         <!-- cloud-body -->
         <div class="cloud-body">
+          <!--  강사 질문하기  -->
+          <CloudNowTeacherQuestion v-if="showTeacherQstnComp"></CloudNowTeacherQuestion>
+
           <!-- cloud-player -->
           <div class="cloud-player">
             <!-- player-main -->
@@ -36,7 +39,7 @@
                 <div class="viewport-header">
                   <div class="header-column header-views">
                     <i class="icon-eye"></i>
-                    <span class="text">1,638</span>
+                    <span class="text">{{connUserCnt}}</span>
                   </div>
                   <div class="header-column header-actions">
                     <button class="btn-viewport">
@@ -45,39 +48,52 @@
                   </div>
                 </div>
                 <div class="viewport-video">
-                  <video src="" poster="../assets/images/@tmp/@tmp_cloud_02.jpg"></video>
+
+                  <LiveCast v-if="isLiveCastShow" :access-type="userInfo.accessType" :user-info="userInfo"/>
+                  <LiveConference v-if="isLiveConfShow" :access-type="userInfo.accessType" :user-info="userInfo"/>
+
+<!--                  <iframe src="https://zep.us/play/8jd49y"></iframe>-->
+<!--                  <video id="localVideo" ref="localVideoEl" src="" poster="../assets/images/@tmp/@tmp_cloud_02.jpg"></video>-->
                 </div>
               </div>
               <!-- main-actions -->
               <div class="main-actions">
                 <!-- menu-container -->
-                <div v-if="userInfo.accessType === 'admin'" class="menu-buttons">
+                <div v-if="userInfo.accessType === 'full-access'" class="menu-buttons">
                   <ul class="menu-list">
-                    <li class="menu-item dropdown is-active">
-                      <button class="btn-menu is-active">
+                    <li class="menu-item dropdown" :class="{'is-active': showLectureMenu}">
+                      <button class="btn-menu" :class="{'is-active': showLectureMenu}"
+                              @click="toggleMenu('lecture')">
                         <i class="icon-menu-lecture"></i>
                         <span class="text">강의</span>
                       </button>
-<!--                      <div class="dropdown-target">-->
-<!--                        <div class="dropdown-box">-->
-<!--                          <article class="dropdown-option-group">-->
-<!--                            <h4 class="option-group-title">학습관리</h4>-->
-<!--                            <ul class="dropdown-option-list">-->
-<!--                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습시작</a></li>-->
-<!--                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습종료</a></li>-->
-<!--                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">휴식시작</a></li>-->
-<!--                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">휴식종료</a></li>-->
-<!--                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습종료 취소</a></li>-->
-<!--                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습종료 확인</a></li>-->
-<!--                            </ul>-->
-<!--                          </article>-->
-<!--                        </div>-->
-<!--                      </div>-->
+                      <div class="dropdown-target">
+                        <div class="dropdown-box">
+                          <article class="dropdown-option-group">
+                            <h4 class="option-group-title">학습관리</h4>
+                            <ul class="dropdown-option-list">
+                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습시작</a></li>
+                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습종료</a></li>
+                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">휴식시작</a></li>
+                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">휴식종료</a></li>
+                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습종료 취소</a></li>
+                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">학습종료 확인</a></li>
+                            </ul>
+                          </article>
+                        </div>
+                      </div>
                     </li>
-                    <li class="menu-item">
-                      <button class="btn-menu">
+                    <li :class="`menu-item ${isLiveCastShow ? 'is-active' : ''}`">
+                      <button @click="connectCastFunc('cast')" class="btn-menu">
                         <i class="icon-menu-display"></i>
-                        <span class="text">화면</span>
+<!--                        <span class="text">화면</span>-->
+                        <span class="text">캐스트</span>
+                      </button>
+                    </li>
+                    <li :class="`menu-item ${isLiveConfShow ? 'is-active' : ''}`">
+                      <button @click="connectCastFunc('conf')" class="btn-menu">
+                        <i class="icon-menu-display"></i>
+                        <span class="text">화상</span>
                       </button>
                     </li>
                     <li class="menu-item">
@@ -135,7 +151,7 @@
                 <div class="chat-screen">
                   <ul class="chat-screen-messages" ref="chatScreenEl">
                     <!-- my -->
-                    <ChatMessage v-for="(item, idx) in msgArr" :key="idx" :type="item.type" :message="item.message" :lrner-name="item.lrnerNm" :send-date="item.sendDate"></ChatMessage>
+                    <ChatMessage v-for="(item, idx) in msgArr" :key="idx" :type="item.type" :message="item.message" :lrner-id="item.lrnerId" :lrner-name="item.lrnerNm" :send-date="item.sendDate"></ChatMessage>
                   </ul>
                 </div>
                 <div class="chat-write">
@@ -145,15 +161,17 @@
                       <button class="btn-file"><i class="icon-file"></i></button>
                     </div>
                     <div class="option-column">
-                      <div class="option-menu dropdown is-active">
-                        <button class="btn-menu"><i class="icon-menu"></i></button>
-<!--                        <div class="dropdown-target">-->
-<!--                          <div class="dropdown-box">-->
-<!--                            <ul class="dropdown-option-list">-->
-<!--                              <li class="dropdown-option-item"><a href="" class="dropdown-option-link">강사님께 질문하기</a></li>-->
-<!--                            </ul>-->
-<!--                          </div>-->
-<!--                        </div>-->
+                      <div class="option-menu dropdown" :class="{'is-active': showTeacherQstnMenu}">
+                        <button class="btn-menu" @click="toggleMenu('teacher')"><i class="icon-menu"></i></button>
+                        <div class="dropdown-target">
+                          <div class="dropdown-box">
+                            <ul class="dropdown-option-list">
+                              <li class="dropdown-option-item">
+                                <a href="javascript:" @click="showTeacherQstnCompFunc" class="dropdown-option-link">강사님께 질문하기</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -161,7 +179,6 @@
                     <input type="text" placeholder="메시지 입력"
                            v-model="inputMessage"
                            @keyup.enter="sendMessage"
-                           @keyup="updateTyping"
                     />
                     <button class="btn-write" @click="sendMessage"><span class="text">전송</span></button>
                   </div>
@@ -185,46 +202,71 @@
 </style>
 
 <script>
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import io from 'socket.io-client'
 import {useStore} from "vuex";
-import {ACT_GET_USERS_DECRYPT, ACT_GET_USERS_ENCRYPT} from "@/store/modules/user/users";
+import {ACT_GET_REDIS_USERS_LIST, ACT_GET_USERS_DECRYPT, ACT_GET_USERS_ENCRYPT} from "@/store/modules/user/users";
 import {useRoute} from "vue-router";
 import ChatMessage from "@/components/ChatMessage";
 import {timestampToDateFormat} from "@/assets/js/common/util";
+import ChatProfileImage from "@/components/ChatProfileImage";
+import LiveCast from "@/components/LiveCast";
+import CloudNowTeacherQuestion from "@/components/CloudNowTeacherQuestion";
+import LiveConference from "@/components/LiveConference";
 
 export default {
   name: "ChatMng",
   components:{
+    LiveConference,
+    CloudNowTeacherQuestion,
+    LiveCast,
+    ChatProfileImage,
     ChatMessage,
   },
   setup(){
 
     const store = useStore();
-
-    let socketDns = "";
-    // let socketDns = 'http://devlxp.kbstar.com'
+    let socketDns = '';
+    socketDns = 'localhost:3000'; //
+    // socketDns = 'http://devlxp.kbstar.com'
 
     let socket = io(socketDns, { transports: ['websocket'], path:'/websocket/chat' }); //채팅소켓
     let domSocket = io(socketDns, { transports: ['websocket'], path:'/websocket/system' }); // 컨트롤소켓
 
     const inputMessage = ref();
-    const btnAreaEl = ref();
-    const connected = ref(false);
     const msgArr = ref([]);
+    const showLectureMenu = ref(false);
+    const showTeacherQstnMenu = ref(false);
+    const showTeacherQstnComp = ref(false);
 
     const chatScreenEl = ref();
+    const isLiveCastShow = ref(false); // 캐스트 여부
+    const isLiveConfShow = ref(false); // 컨퍼런스 여부
+
+    const connUserCnt = ref(0);
 
     onMounted(() => {
-      console.log('mounted====>')
+      console.log('onMounted====>',socket.connected,',',domSocket.connected);
+      isLiveCastShow.value = false;
+      isLiveConfShow.value = false;
+      document.body.classList.add('notscroll');
       if(!route.query.params){
-        alert('서버 오류입니다.')
         window.close();
       }else{
-        localStorage.setItem('info', route.query.params)
+        // localStorage.setItem('info', route.query.params)
         userInfo.value = JSON.parse(decodeURIComponent((atob(route.query.params))));
         initUserData();
       }
+    })
+
+    onUnmounted(() => {
+      console.log('onUnmounted====>',socket.connected,',',domSocket.connected);
+      if(socket.connected || domSocket.connected){
+        socket.disconnect();
+        domSocket.disconnect();
+      }
+      isLiveCastShow.value = false;
+      isLiveConfShow.value = false;
     })
 
     const userInfo = ref({})
@@ -232,51 +274,49 @@ export default {
     const initUserData = () => {
       userInfo.value.sendType='';
       userInfo.value.message='';
-      userInfo.value.messageType='';
+      userInfo.value.messageType=''; // dom변경 타입
       userInfo.value.url='';
       userInfo.value.socketId='';
       userInfo.value.socketId2='';
-      userInfo.value.channelNo='channel1';
-      userInfo.value.accessType = 'normal'
-      if(userInfo.value.lrnerId === 'S017330'){
-        userInfo.value.accessType = 'admin';
-      }
+      userInfo.value.channelNo='channel1'; // 채널 구분을 뭘로 할건지?
+      userInfo.value.accessType = 'viewer' // access type도 어떻게 할건지?
+      userInfo.value.isCast = 'close';
+      userInfo.value.isConf = 'close';
+      // 팀장님 계정으로 하드코딩
+      if(userInfo.value.lrnerId === 'S017330') userInfo.value.accessType = 'full-access';
 
       socket.emit('chat_channel_connection', userInfo.value);
-      domSocket.emit('message_channel_connection', userInfo.value);
+      domSocket.emit('domSocket_channel_connection', userInfo.value);
     }
 
     /**
      * 클라이언트 이벤트
      */
-    const sendUserName = () => {
-      // 퇴장클릭시 소켓 끊김으로 재연결
-      // if(socket.disconnected){
-      //   socket.connect();
-      //   domSocket.connect();
-      // }
-      userInfo.value.sendType = 'connection'
-      userInfo.value.message = '입장'
-
-      socket.emit('chat_channel_connection', userInfo.value);
-      domSocket.emit('message_channel_connection', userInfo.value);
-    }
+    // const sendUserName = () => {
+    //   userInfo.value.sendType = 'connection'
+    //   userInfo.value.message = '입장'
+    //
+    //   socket.emit('chat_channel_connection', userInfo.value);
+    //   domSocket.emit('domSocket_channel_connection', userInfo.value);
+    // }
 
     const sendMessage = () => {
       if(inputMessage.value === undefined || inputMessage.value === '') return;
       userInfo.value.sendType = 'message';
       userInfo.value.message = inputMessage.value;
+      inputMessage.value = '';
 
       socket.emit('message', userInfo.value);
-      inputMessage.value = '';
     }
 
     const sendDisconnect = () => {
-      console.log('sendDisconnect-----------');
+      console.log('sendDisconnect =======> ');
       userInfo.value.sendType = 'disconnect';
 
-      socket.emit('disconnectCustom', userInfo.value);
-      domSocket.emit('disconnectCustom', userInfo.value);
+      // socket.emit('disconnect', userInfo.value);
+      // domSocket.emit('disconnect', userInfo.value);
+      // socket.emit('disconnectCustom', userInfo.value);
+      // domSocket.emit('disconnectCustom', userInfo.value);
       socket.disconnect();
       domSocket.disconnect();
     }
@@ -285,15 +325,13 @@ export default {
      * socket이벤트
      */
     socket.on('chat_channel_connection', (data) => {
-      console.log('socket chat_channel_connection-----------',data)
+      console.log('chat connection success ========> ',data.socketId)
       userInfo.value.socketId = data.socketId;
-      connected.value = true;
       getRedisUsersList();
-
     });
 
     socket.on('message', (data) => {
-      console.log('messsage===>',data)
+      console.log('chat messsage===>',data)
       let type = '';
       let lrnerNm = data.lrnerNm;
       if(data.lrnerId === userInfo.value.lrnerId) {
@@ -301,108 +339,104 @@ export default {
         lrnerNm = '';
       }
       let curDate = timestampToDateFormat(data.connectDate, '(A) hh:mm')
-      msgArr.value.push({type: type, message:data.message, lrnerNm: lrnerNm, sendDate: curDate})
+      msgArr.value.push({type, 'message': data.message, 'lrnerId': data.lrnerId, lrnerNm, 'sendDate': curDate});
     });
 
     socket.on('disconnect', (data) => {
-      console.log('disconnect-----------', data)
-      window.localStorage.removeItem('info');
-      connected.value = false;
-      location.reload(true);
-      // window.close();
+      console.log('disconnect ========> ', data)
+      getRedisUsersList();
+      // window.localStorage.removeItem('info');
+      // location.reload(true);
     });
 
     socket.on('disconnectCustom', (data) => {
-      console.log('disconnectCustom--------------', data)
-      getRedisUsersList();
+      console.log('disconnectCustom ========> ', data)
     });
 
     /**
-     * domSocket)
+     * domSocket
      */
     domSocket.on('domSocket_channel_connection', (data) => {
-      console.log('domSocket message_channel_connection----------------', data.lrnerNm)
+      console.log('domSocket connection success ========> ', data.socketId2)
       userInfo.value.socketId2 = data.socketId2;
     });
 
     domSocket.on('disconnect', () => {
-      console.log('domSocket disconnect---------------')
+      console.log('domSocket disconnect ========> ')
     });
 
     domSocket.on('disconnectCustom', () => {
-      console.log('domSocket disconnectCustom--------------')
+      console.log('domSocket disconnectCustom ========> ')
     });
 
     domSocket.on('message', (data) => {
-      console.log('domSocket message-------------------');
-
-      if (data.messageType === 'youtube') {
-        window.open('https://www.youtube.com/', '_blank');
+      console.log('domSocket message ========> ', data.messageType);
+      if (data.messageType === 'liveCast') {
+        isLiveCastShow.value ? isLiveCastShow.value = false : isLiveCastShow.value = true;
+      }else if(data.messageType === 'liveConf'){
+        isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
       }
-
     });
 
     /**
      * 기능 함수들
      */
-    const youtubeFunc = () => {
+    const connectCastFunc = (liveType) => {
       userInfo.value.sendType='message';
-      userInfo.value.messageType='youtube'
-
-      domSocket.emit('message', userInfo.value);
+      if(liveType === 'cast'){
+        userInfo.value.messageType = 'liveCast'
+        domSocket.emit('message', userInfo.value);
+      }else{
+        userInfo.value.messageType = 'liveConf';
+        domSocket.emit('message', userInfo.value);
+      }
     }
 
     /**
      * 기타 이벤트함수들
      */
-    const updateTyping = () => {
-      let typing = true;
-      if (connected.value) {
-        if (!typing) {
-          typing = true;
-          socket.emit('typing');
-        }
-        let lastTypingTime = (new Date()).getTime();
+    const toggleMenu = (showType) => {
+      if(showType === 'lecture') showLectureMenu.value = !showLectureMenu.value;
+      else if(showType === 'teacher') showTeacherQstnMenu.value = !showTeacherQstnMenu.value;
+    }
 
-        setTimeout(() => {
-          let typingTimer = (new Date()).getTime();
-          let timeDiff = typingTimer - lastTypingTime;
-          if (timeDiff >= 400 && typing) {
-            socket.emit('stop typing');
-            typing = false;
-          }
-        }, 400);
-      }
+    const showTeacherQstnCompFunc = () => {
+      showTeacherQstnComp.value = !showTeacherQstnComp.value;
+    }
+
+    const menuCompHideFunc = () => {
+      showLectureMenu.value = false;
+      showTeacherQstnMenu.value = false;
+      showTeacherQstnComp.value = false;
     }
 
     // 유저 정보 복호화 후 세팅
     const getUsersDecryptFunc = () => {
       store.dispatch(`users/${ACT_GET_USERS_DECRYPT}`, localStorage.getItem('info'))
           .then((res) => {
-            // console.log('res====>',res)
             if (res.status === 200) {
-              console.log('200=>',res.data);
               // userInfo.value.lrnerNm = res.data.lrnerNm;
               // userInfo.value.userSn = res.data.userSn;
               // userInfo.value.lrnerId = res.data.lrnerId;
               // userInfo.value.accTy = res.data.accTy;
               // userInfo.value.channelNo = res.data.lrnerId; // 방장의 아이디가 채널아이디(임시)
-              sendUserName();
             }
           }).catch(e => {
         console.error(e);
       });
     }
 
-    // 레디스에서 회원정보를 가져온다.
+    // 레디스에서 회원정보 가져와서 카운트 체크
     const getRedisUsersList = () => {
-      // store.dispatch(`users/${ACT_GET_REDIS_USERS_LIST}`, userInfo.value.channelNo)
-      //     .then((res) => {
-      //       console.log('getRedisUsersList====>',res)
-      //       // if (res.status === 200) {}
-      //     }).catch(e => {
-      //   console.error(e);
-      // });
+      store.dispatch(`users/${ACT_GET_REDIS_USERS_LIST}`, userInfo.value.channelNo)
+          .then((res) => {
+            console.log('getRedisUsersList====>',res)
+            if (res.status === 200) {
+              console.log('status 200 ==> ',connUserCnt.value)
+            }
+          }).catch(e => {
+        console.error(e);
+      });
     }
 
     const route = useRoute();
@@ -430,163 +464,30 @@ export default {
 
     return {
       inputMessage,
-      btnAreaEl,
       userInfo,
       chatScreenEl,
       msgArr,
+      isLiveCastShow,
+      isLiveConfShow,
+      showLectureMenu,
+      showTeacherQstnMenu,
+      showTeacherQstnComp,
+      connUserCnt,
 
-      sendUserName,
       sendMessage,
       sendDisconnect,
-      youtubeFunc,
       getUsersEncryptFunc,
       getUsersDecryptFunc,
-      updateTyping,
       getRedisUsersList,
-
-      connected,
-
+      connectCastFunc,
+      showTeacherQstnCompFunc,
+      toggleMenu,
+      menuCompHideFunc,
     }
   }
 }
 </script>
 
 <style scoped>
-
-/* add css */
-.iframe-area, .connect-area{
-  width: 100%;
-  height: 100%;
-  position: relative;
-  /*display: none;*/
-}
-
-.wrap{
-  display: flex;
-  flex-direction: column;
-  /*flex-direction: row;*/
-  height: 100vh;
-  border: 2px solid lightgray;
-  border-radius: 5px;
-}
-
-.left-wrap{
-  width: 60%;
-}
-
-.right-wrap{
-  width:40%;
-}
-
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-}
-
-html, input {
-  font-family:
-      "HelveticaNeue-Light",
-      "Helvetica Neue Light",
-      "Helvetica Neue",
-      Helvetica,
-      Arial,
-      "Lucida Grande",
-      sans-serif;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-ul {
-  list-style: none;
-  word-wrap: break-word;
-}
-
-/* Pages */
-
-.pages {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  position: relative;
-}
-
-.page {
-  height: 100%;
-  position: absolute;
-  width: 100%;
-}
-
-/* Chat page */
-
-.chat.page {
-  /*display: none;*/
-  flex-direction: column;
-}
-
-/* Font */
-
-.messages {
-  font-size: 100%;
-}
-
-.inputMessage {
-  font-size: 100%;
-}
-
-.log {
-  color: gray;
-  font-size: 70%;
-  margin: 5px;
-  text-align: center;
-}
-
-/* Messages */
-
-.chatArea {
-  height: 91%;
-}
-
-.messages {
-  height: 100%;
-  margin: 0;
-  overflow-y: scroll;
-  padding: 10px 20px 10px 20px;
-}
-
-.message.typing .messageBody {
-  color: gray;
-}
-
-.username {
-  font-weight: 700;
-  overflow: hidden;
-  padding-right: 15px;
-  text-align: right;
-}
-
-/* Input */
-
-.inputMessage {
-  border: 1px solid gray;
-  bottom: 0;
-  height: 60px;
-  left: 0;
-  outline: none;
-  padding-left: 10px;
-  margin-right: 5px;
-  right: 0;
-  width: 85%;
-}
-
 
 </style>

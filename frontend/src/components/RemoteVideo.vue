@@ -1,5 +1,5 @@
 <template>
-  <video class="remote-video"></video>
+  <video class="remote-video" muted autoplay></video>
 </template>
 
 <script>

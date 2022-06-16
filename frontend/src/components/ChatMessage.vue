@@ -2,7 +2,7 @@
   <li v-if="type==='my'" class="sent-message message">
     <div class="message-content">
       <div class="message-avatar">
-        <img src="../assets/images/@tmp/@tmp_profile.jpg" />
+        <ChatProfileImage :target="lrnerId"></ChatProfileImage>
       </div>
       <div class="message-bubble">
         <p class="message-text">{{message}}</p>
@@ -13,7 +13,7 @@
   <li v-else class="incoming-message message">
     <div class="message-content">
       <div class="message-avatar">
-        <img src="../assets/images/@tmp/@tmp_profile_02.jpg" />
+        <ChatProfileImage :target="lrnerId"></ChatProfileImage>
       </div>
       <div class="message-bubble">
         <p class="message-text">{{message}}</p>
@@ -25,20 +25,23 @@
 
 <script>
 import {onMounted} from "vue";
+import ChatProfileImage from "@/components/ChatProfileImage";
 
 export default {
   name: "MyMessage",
+  components: {ChatProfileImage},
   props:{
     type: String,
     message: String,
+    lrnerId: String,
     lrnerName: String,
     sendDate: String,
-  },setup(props){
+  },setup(){
 
+    // console.log(props.lrnerId,',',props.lrnerName)
     onMounted(() => {
       document.querySelector('.chat-screen').scrollTop = document.querySelector('.chat-screen').scrollHeight;
     });
-    console.log('props;;',props.message,',',props.lrnerName,',',props.sendDate,',',props.type)
   }
 }
 </script>

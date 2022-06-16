@@ -622,3 +622,8 @@ export const imgPreview = (imgSrc) => {
     url:imgSrc
   })
 }
+
+export const getProfileImg = (lrnerId) => {
+  if(!lrnerId) return;
+  return `https://hrd2.kbstar.com/images/profile/1/${lrnerId}.jpg`;  // 프로필 정보
+}

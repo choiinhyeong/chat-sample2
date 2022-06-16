@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-// WhatapAgent = require('whatap').NodeAgent;
+WhatapAgent = require('whatap').NodeAgent;
 
 app.use(cors());
 const dotenv = require('dotenv');
@@ -53,7 +53,6 @@ console.log("process.env.SERVER : " , process.env.SERVER);
 
 let redisClient = null;
 let redisStoreHost = null;
-
 /*
 *  내부 레디스주소 나중에 env로 빼기
 * */
@@ -63,25 +62,25 @@ let redisStoreHost = null;
 // }
 
 // 외부 레디스 주소
-let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-if(process.env.CHAT_ENV === 'prd'){
-    redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-}
-if(process.env.SERVER == 'local'){
-    redisClient = new redis({
-        port: 6379,
-        host: redisHost,
-        connectTimeout: 10000
-    });
-    redisStoreHost = redisHost;
-}else{
-    redisClient = new redis.Cluster([
-        {port: 6379, host: redisHost}
-    ]);
-    redisStoreHost = redisHost;
-}
+// let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+// if(process.env.CHAT_ENV === 'prd'){
+//     redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+// }
+// if(process.env.SERVER == 'local'){
+//     redisClient = new redis({
+//         port: 6379,
+//         host: redisHost,
+//         connectTimeout: 10000
+//     });
+//     redisStoreHost = redisHost;
+// }else{
+//     redisClient = new redis.Cluster([
+//         {port: 6379, host: redisHost}
+//     ]);
+//     redisStoreHost = redisHost;
+// }
 // Adapting Redis
-io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
+// io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
 const apiRouter = require('./routes/api') (app,io,redisClient,pool);
 
@@ -100,7 +99,7 @@ io.on('connection', (socket) => {
             socketId : socket.id,
             channelNo : data.channelNo,
             lrnerId: data.lrnerId,
-            lrnerName : data.lrnerName,
+            lrnerNm : data.lrnerNm,
             connectDate : connectDate
         }
 
@@ -174,7 +173,7 @@ io2.on('connection', (socket) => {
             socketId2 : socket.id,
             channelNo : data.channelNo,
             lrnerId: data.lrnerId,
-            lrnerName : data.lrnerName,
+            lrnerNm : data.lrnerNm,
             connectDate : connectDate
         }
 

@@ -51,7 +51,7 @@
 
                   <LiveCast v-if="isLiveCastShow" :access-type="userInfo.accessType" :user-info="userInfo"/>
                   <LiveConference v-if="onLiveConfShow" :style="`${isLiveConfShow ? 'display:block;' : 'display:none;'}`" :access-type="userInfo.accessType" :user-info="userInfo"/>
-                  <iframe v-if="false" src="https://zep.us/play/8jd49y"></iframe>
+                  <iframe v-if="isIframeShow" src="https://zep.us/play/8jd49y" width="100%" height="584px"></iframe>
 
                 </div>
               </div>
@@ -95,6 +95,12 @@
                         <span class="text">화상</span>
                       </button>
                     </li>
+                    <li :class="`menu-item ${isIframeShow ? 'is-active' : ''}`">
+                      <button @click="connectCastFunc('zep')" class="btn-menu">
+                        <i class="icon-menu-attendance"></i>
+                        <span class="text">ZEP</span>
+                      </button>
+                    </li>
                     <li class="menu-item">
                       <button class="btn-menu">
                         <i class="icon-menu-attendance"></i>
@@ -120,20 +126,20 @@
                       </button>
                     </li>
                   </ul>
-                  <ul class="menu-list">
-                    <li class="menu-item">
-                      <button class="btn-menu">
-                        <i class="icon-menu-faq"></i>
-                        <span class="text">FAQ</span>
-                      </button>
-                    </li>
-                    <li class="menu-item">
-                      <button class="btn-menu">
-                        <i class="icon-menu-learners"></i>
-                        <span class="text">학습인원</span>
-                      </button>
-                    </li>
-                  </ul>
+<!--                  <ul class="menu-list">-->
+<!--                    <li class="menu-item">-->
+<!--                      <button class="btn-menu">-->
+<!--                        <i class="icon-menu-faq"></i>-->
+<!--                        <span class="text">FAQ</span>-->
+<!--                      </button>-->
+<!--                    </li>-->
+<!--                    <li class="menu-item">-->
+<!--                      <button class="btn-menu">-->
+<!--                        <i class="icon-menu-learners"></i>-->
+<!--                        <span class="text">학습인원</span>-->
+<!--                      </button>-->
+<!--                    </li>-->
+<!--                  </ul>-->
                 </div>
                 <!-- //menu-container -->
 
@@ -214,7 +220,7 @@ import CloudNowTeacherQuestion from "@/components/CloudNowTeacherQuestion";
 import LiveConference from "@/components/LiveConference";
 
 export default {
-  name: "ChatMng",
+  name: "CloudNow",
   components:{
     LiveConference,
     CloudNowTeacherQuestion,
@@ -242,6 +248,7 @@ export default {
     const isLiveCastShow = ref(false); // 캐스트 여부
     const onLiveConfShow = ref(false); // 컨퍼런스 방송여부
     const isLiveConfShow = ref(false); // 컨퍼런스 노출여부
+    const isIframeShow = ref(false);
     const cloudType = ref('');
 
     const connUserCnt = ref(0); // 접속유저 카운트
@@ -278,7 +285,7 @@ export default {
       userInfo.value.messageType=''; // dom변경 타입
       userInfo.value.socketId='';
       userInfo.value.socketId2='';
-      userInfo.value.channelNo='channel1'; // 채널 구분은 아마 객체 시퀀스로 할듯;
+      userInfo.value.channelNo='channel-now-chat'; // 채널 구분은 아마 객체 시퀀스로 할듯;
       userInfo.value.accessType = 'viewer' // access type도 어떻게 할건지?
       // 관리자 하드코딩
       if(userInfo.value.lrnerId === 'S017330') userInfo.value.accessType = 'full-access';
@@ -315,8 +322,12 @@ export default {
      * socket이벤트
      */
     socket.on('chat_channel_connection', (data) => {
-      console.log('chat connection success ========> ',data.socketId)
+      console.log('chat connection success ========> ',data)
       userInfo.value.socketId = data.socketId;
+      let lrnerNm = data.lrnerNm;
+      let message = lrnerNm +'님이 현재 참여하셨습니다.';
+      let curDate = timestampToDateFormat(data.connectDate, '(A) hh:mm')
+      msgArr.value.push({type: '', message, 'lrnerId': data.lrnerId, lrnerNm, 'sendDate': curDate});
       getRedisUsersList();
     });
 
@@ -376,10 +387,15 @@ export default {
       if(liveType === 'cast'){
         userInfo.value.messageType = 'liveCast'
         domSocket.emit('message', userInfo.value);
-        userInfo.value.messageType = 'liveConf';
-        domSocket.emit('message', userInfo.value);
-      }else{
-        isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
+        // userInfo.value.messageType = 'liveConf';
+        // domSocket.emit('message', userInfo.value);
+      }else if(liveType === 'conf'){
+        window.open('/cloud/conf','', '_blank');
+        // userInfo.value.messageType = 'liveConf';
+        // domSocket.emit('message', userInfo.value);
+        // isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
+      }else if(liveType === 'zep'){
+        isIframeShow.value ? isIframeShow.value = false : isIframeShow.value = true;
       }
     }
 
@@ -461,6 +477,7 @@ export default {
       isLiveCastShow,
       onLiveConfShow,
       isLiveConfShow,
+      isIframeShow,
       showLectureMenu,
       showTeacherQstnMenu,
       showTeacherQstnComp,

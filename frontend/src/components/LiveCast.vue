@@ -95,11 +95,9 @@ export default {
         let searchResult = await remon.fetchCasts();
 
         searchResult.forEach((ch) => {
-          console.log('searchResult======>',ch,',',ch.status,',',ch.id)
           if (ch.status === 'COMPLETE') {
             connectStart(true);
             clearInterval(waitingInterval);
-            console.log('else remon;;;;',remon.context.state);
           }
         });
       }, 3000);

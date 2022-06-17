@@ -5,17 +5,26 @@ const routes = [
     //     path: '/',
     //     redirect: '/home'
     // },
+    // {
+    //     path: '/home',
+    //     name: 'HomeMng',
+    //     component: () => import('@/views/HomeMng')
+    // },
     {
-        path: '/home',
-        name: 'HomeMng',
-        component: () => import('@/views/HomeMng')
+        path: '/cloud/now',
+        name: 'CloudNow',
+        component: () => import('@/views/CloudNow')
     },
     {
-        path: '/',
-        name: 'ChatMng',
-        component: () => import('@/views/ChatMng')
+        path: '/cloud/on',
+        name: 'CloudOn',
+        component: () => import('@/views/CloudOn')
     },
-
+    {
+        path: '/cloud/conf',
+        name: 'LiveConference',
+        component: () => import('@/components/LiveConference')
+    }
 ]
 
 const router = createRouter({

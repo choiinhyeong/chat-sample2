@@ -2,9 +2,10 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-WhatapAgent = require('whatap').NodeAgent;
+// WhatapAgent = require('whatap').NodeAgent;
 
 app.use(cors());
+
 const dotenv = require('dotenv');
 
 const path = require('path');
@@ -62,30 +63,42 @@ let redisStoreHost = null;
 // }
 
 // 외부 레디스 주소
-let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-if(process.env.CHAT_ENV === 'prd'){
-    redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-}
-if(process.env.SERVER == 'local'){
-    redisClient = new redis({
-        port: 6379,
-        host: redisHost,
-        connectTimeout: 10000
-    });
-    redisStoreHost = redisHost;
-}else{
-    redisClient = new redis.Cluster([
-        {port: 6379, host: redisHost}
-    ]);
-    redisStoreHost = redisHost;
-}
-// Adapting Redis
-io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
+// let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+// if(process.env.CHAT_ENV === 'prd'){
+//     redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+// }
+// if(process.env.SERVER == 'local'){
+//     redisClient = new redis({
+//         port: 6379,
+//         host: redisHost,
+//         connectTimeout: 10000
+//     });
+//     redisStoreHost = redisHost;
+// }else{
+//     redisClient = new redis.Cluster([
+//         {port: 6379, host: redisHost}
+//     ]);
+//     redisStoreHost = redisHost;
+// }
+// // Adapting Redis
+// io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
+// api router
 const apiRouter = require('./routes/api') (app,io,redisClient,pool);
+// url path router
+const indexRouter = require('./routes/index');
+
+let history = require('connect-history-api-fallback');
+
+app.use('/', indexRouter);
+app.use('/chat/cloud/now', indexRouter);
+app.use('/chat/cloud/on', indexRouter);
+app.use('/chat/cloud/conf', indexRouter);
 
 // Routing
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(history());
 
 /**
  * 챗 과련 소켓
@@ -109,6 +122,7 @@ io.on('connection', (socket) => {
 
         socket.userInfo = userInfo;
         data.socketId = socket.id;
+        data.connectDate = connectDate;
 
         //레디스 채널별로 접속자 저장
         if(redisClient !== null){
@@ -184,6 +198,7 @@ io.on('connection', (socket) => {
 /**
  * dom컨트롤 관련 소켓
  */
+let confMap = new Map();
 io2.on('connection', (socket) => {
 
     socket.on('domSocket_channel_connection', async (data) => {
@@ -222,6 +237,17 @@ io2.on('connection', (socket) => {
         data.connectDate = currentDate;
 
         io2.to(data.channelNo).emit('message', data);
+    });
+
+    socket.on('nowConfAddUser', async (data) => {
+        console.log('==============================>nowConfAddUser',data);
+
+        // const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
+        //
+        // data.socketId2 = socket.id;
+        // data.connectDate = currentDate;
+
+        io2.to(data.channelNo).emit('nowConfAddUser', data);
     });
 
     socket.on('disconnect', async () => {

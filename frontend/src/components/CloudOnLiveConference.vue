@@ -16,7 +16,11 @@
 <!--    </header>-->
 
     <div class="flex row">
-      <div class="media-list">
+      <div class="media-list"
+           style="width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;">
         <div class="media-block" v-if="localMedia">
           <div class="participant-id">{{userInfo.deptNm}} {{userInfo.lrnerNm}} {{myId}}</div>
           <div class="local-container"></div>
@@ -46,10 +50,9 @@ import voiceMeter from './connectLive/VoiceMeter.vue';
 import remoteVideo from './connectLive/RemoteVideo.vue';
 import ConnectLive from '@connectlive/connectlive-web-sdk';
 import {ref, nextTick, onMounted, onUnmounted} from "vue";
-import io from "socket.io-client";
 
 export default {
-  name: "LiveConference",
+  name: "CloudOnLiveConference",
   props:{
     accessType: String,
     userInfo: {
@@ -61,7 +64,7 @@ export default {
     remoteVideo
   },
   setup(props){
-    const confName = ref(props.userInfo.channelNo+"-conf");
+    const confName = ref(props.userInfo.channelNo+"-on-conf");
     const conf = ref(null);
     const localMedia = ref(null);
     const localScreen = ref(null);
@@ -70,14 +73,11 @@ export default {
     const myId = ref('');
     const cameraDevices = ref([]);
     const audioCheckInterval = ref(-1);
-    // const userInfo = ref(props.userInfo);
 
     // const key = '1234567890';
     // const serviceId = 'SERVICEID1';
     // const key = '6d03bbd05f18016c1af2baaddab2db521953dfe900223455954d6044227912a2';
     // const serviceId = 'aa3a145e-843a-4702-a0a1-fe3b0dee420b';
-    let socketDns = 'localhost:3000';
-    let domSocket = io(socketDns, { transports: ['websocket'], path:'/websocket/system' }); // 컨트롤소켓
 
     const init = () => {
       console.log(conf.value,'init====>', props.userInfo);
@@ -120,17 +120,6 @@ export default {
       isConnected.value = true;
       conf.value.publish([localMedia.value]);
 
-      // props.userInfo.participantId = conf.value.localParticipant.id;
-      // userInfo.value.participantId = conf.value.localParticipant.id;
-      let confInfo = {
-        lrnerNm: props.userInfo.lrnerNm,
-        participantId: conf.value.localParticipant.id,
-        confName: confName.value,
-        channelNo: props.userInfo.channelNo,
-        dateType: 'conf',
-      }
-      domSocket.emit('nowConfAddUser',confInfo);
-
       audioCheckInterval.value = window.setInterval(()=>{
         const audioLevels = conf.value.getRemoteAudioLevels();
         audioLevels.remoteParticipants.forEach((audioParticipant)=>{
@@ -144,22 +133,12 @@ export default {
       }, 250);
     }
 
-    domSocket.on('nowConfAddUser', (data) => {
-      console.log('nowConfAddUser;;;;',data)
-      remoteParticipants.value.forEach(participant => {
-        console.log('participant;;;;',participant);
-        if(participant.id === data.participantId){
-          participant.lrnerNm = data.lrnerNm;
-        }
-      })
-    });
-
     const onCreateLocalMedia = async() => {
       localMedia.value = await ConnectLive.createLocalMedia({
         audio: true,
         video: true
       });
-      console.log(conf.value)
+
       // await onCreateLocalMedi aCallback();
       nextTick(async() => {
         const video = localMedia.value.video.attach();
@@ -186,7 +165,7 @@ export default {
 
             remoteVideos = await conf.value.subscribe(videoIds);
           }
-          console.log('connected;;;;',participant);
+          console.log('connected===================><<<<<<<<<<<<<<<<<<',participant);
           remoteParticipants.value.push({
             participant: participant,
             videos: remoteVideos,
@@ -197,6 +176,7 @@ export default {
       });
 
       conf.value.on('participantEntered', (evt)=>{
+        console.log('participantEntered===================>',evt)
         remoteParticipants.value.push({
           participant: evt.remoteParticipant,
           videos: [],
@@ -210,6 +190,7 @@ export default {
       });
 
       conf.value.on('remoteVideoPublished', async evt => {
+        console.log('remoteVideoPublished===============================>',evt)
         const remoteVideos = await conf.value.subscribe([evt.remoteVideo.videoId]);
         if (remoteVideos.length) {
           const participant = remoteParticipants.value.find(item => item.participant.id === evt.remoteParticipant.id);
@@ -267,7 +248,7 @@ export default {
       document.querySelector('.local-container').appendChild(video);
       conf.value.publish([localScreen.value]);
     };
-    
+
     const onDestroyLocalScreen = async() => {
       localScreen.value.video.detach();
       localScreen.value.stop();
@@ -329,12 +310,12 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  position: absolute;
-  background-color: black;
+  /*position: absolute;*/
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+  background-color: black;
   /*background-color: #101523;*/
   color: #fff;
 }
@@ -395,11 +376,7 @@ header {
 
 .media-list {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-
-  /*width: 300px;*/
+  width: 300px;
   padding: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   overflow: auto;
@@ -407,8 +384,6 @@ header {
 
 .media-list .media-block {
   width: 250px;
-  height: fit-content;
-
   position: relative;
   margin-top: 5px;
   padding: 10px;

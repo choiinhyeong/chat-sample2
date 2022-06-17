@@ -50,10 +50,9 @@
                 <div class="viewport-video">
 
                   <LiveCast v-if="isLiveCastShow" :access-type="userInfo.accessType" :user-info="userInfo"/>
-                  <LiveConference v-if="isLiveConfShow" :access-type="userInfo.accessType" :user-info="userInfo"/>
+                  <LiveConference v-if="onLiveConfShow" :style="`${isLiveConfShow ? 'display:block;' : 'display:none;'}`" :access-type="userInfo.accessType" :user-info="userInfo"/>
+                  <iframe v-if="false" src="https://zep.us/play/8jd49y"></iframe>
 
-<!--                  <iframe src="https://zep.us/play/8jd49y"></iframe>-->
-<!--                  <video id="localVideo" ref="localVideoEl" src="" poster="../assets/images/@tmp/@tmp_cloud_02.jpg"></video>-->
                 </div>
               </div>
               <!-- main-actions -->
@@ -87,7 +86,7 @@
                       <button @click="connectCastFunc('cast')" class="btn-menu">
                         <i class="icon-menu-display"></i>
 <!--                        <span class="text">화면</span>-->
-                        <span class="text">캐스트</span>
+                        <span class="text">방송</span>
                       </button>
                     </li>
                     <li :class="`menu-item ${isLiveConfShow ? 'is-active' : ''}`">
@@ -160,7 +159,7 @@
                       <button class="btn-emoji"><i class="icon-emoji"></i></button>
                       <button class="btn-file"><i class="icon-file"></i></button>
                     </div>
-                    <div class="option-column">
+                    <div v-if="userInfo.accessType !== 'full-access'" class="option-column">
                       <div class="option-menu dropdown" :class="{'is-active': showTeacherQstnMenu}">
                         <button class="btn-menu" @click="toggleMenu('teacher')"><i class="icon-menu"></i></button>
                         <div class="dropdown-target">
@@ -241,17 +240,18 @@ export default {
 
     const chatScreenEl = ref();
     const isLiveCastShow = ref(false); // 캐스트 여부
-    const isLiveConfShow = ref(false); // 컨퍼런스 여부
+    const onLiveConfShow = ref(false); // 컨퍼런스 방송여부
+    const isLiveConfShow = ref(false); // 컨퍼런스 노출여부
+    const cloudType = ref('');
 
-    const connUserCnt = ref(0);
+    const connUserCnt = ref(0); // 접속유저 카운트
 
     onMounted(() => {
       console.log('onMounted====>',socket.connected,',',domSocket.connected);
-      isLiveCastShow.value = false;
-      isLiveConfShow.value = false;
+      route.query.cloud === 'now' ? cloudType.value = 'now' : cloudType.value = 'on';
       document.body.classList.add('notscroll');
       if(!route.query.params){
-        window.close();
+        console.log('재접속 해주세요.')
       }else{
         // localStorage.setItem('info', route.query.params)
         userInfo.value = JSON.parse(decodeURIComponent((atob(route.query.params))));
@@ -267,6 +267,7 @@ export default {
       }
       isLiveCastShow.value = false;
       isLiveConfShow.value = false;
+      onLiveConfShow.value = false;
     })
 
     const userInfo = ref({})
@@ -275,16 +276,14 @@ export default {
       userInfo.value.sendType='';
       userInfo.value.message='';
       userInfo.value.messageType=''; // dom변경 타입
-      userInfo.value.url='';
       userInfo.value.socketId='';
       userInfo.value.socketId2='';
-      userInfo.value.channelNo='channel1'; // 채널 구분을 뭘로 할건지?
+      userInfo.value.channelNo='channel1'; // 채널 구분은 아마 객체 시퀀스로 할듯;
       userInfo.value.accessType = 'viewer' // access type도 어떻게 할건지?
-      userInfo.value.isCast = 'close';
-      userInfo.value.isConf = 'close';
-      // 팀장님 계정으로 하드코딩
+      // 관리자 하드코딩
       if(userInfo.value.lrnerId === 'S017330') userInfo.value.accessType = 'full-access';
-
+      userInfo.value.isCast = false;
+      userInfo.value.isConf = false;
       socket.emit('chat_channel_connection', userInfo.value);
       domSocket.emit('domSocket_channel_connection', userInfo.value);
     }
@@ -292,14 +291,6 @@ export default {
     /**
      * 클라이언트 이벤트
      */
-    // const sendUserName = () => {
-    //   userInfo.value.sendType = 'connection'
-    //   userInfo.value.message = '입장'
-    //
-    //   socket.emit('chat_channel_connection', userInfo.value);
-    //   domSocket.emit('domSocket_channel_connection', userInfo.value);
-    // }
-
     const sendMessage = () => {
       if(inputMessage.value === undefined || inputMessage.value === '') return;
       userInfo.value.sendType = 'message';
@@ -313,10 +304,9 @@ export default {
       console.log('sendDisconnect =======> ');
       userInfo.value.sendType = 'disconnect';
 
-      // socket.emit('disconnect', userInfo.value);
-      // domSocket.emit('disconnect', userInfo.value);
-      // socket.emit('disconnectCustom', userInfo.value);
-      // domSocket.emit('disconnectCustom', userInfo.value);
+      isLiveCastShow.value = false;
+      isLiveConfShow.value = false;
+      onLiveConfShow.value = false;
       socket.disconnect();
       domSocket.disconnect();
     }
@@ -374,7 +364,7 @@ export default {
       if (data.messageType === 'liveCast') {
         isLiveCastShow.value ? isLiveCastShow.value = false : isLiveCastShow.value = true;
       }else if(data.messageType === 'liveConf'){
-        isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
+        onLiveConfShow.value ? onLiveConfShow.value = false : onLiveConfShow.value = true;
       }
     });
 
@@ -386,9 +376,10 @@ export default {
       if(liveType === 'cast'){
         userInfo.value.messageType = 'liveCast'
         domSocket.emit('message', userInfo.value);
-      }else{
         userInfo.value.messageType = 'liveConf';
         domSocket.emit('message', userInfo.value);
+      }else{
+        isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
       }
     }
 
@@ -410,6 +401,19 @@ export default {
       showTeacherQstnComp.value = false;
     }
 
+    // 레디스에서 회원정보 가져와서 카운트 체크
+    const getRedisUsersList = () => {
+      store.dispatch(`users/${ACT_GET_REDIS_USERS_LIST}`, userInfo.value.channelNo)
+          .then((res) => {
+            console.log('getRedisUsersList====>',res)
+            if (res.status === 200) {
+              console.log('status 200 ==> ',connUserCnt.value)
+            }
+          }).catch(e => {
+        console.error(e);
+      });
+    }
+
     // 유저 정보 복호화 후 세팅
     const getUsersDecryptFunc = () => {
       store.dispatch(`users/${ACT_GET_USERS_DECRYPT}`, localStorage.getItem('info'))
@@ -420,19 +424,6 @@ export default {
               // userInfo.value.lrnerId = res.data.lrnerId;
               // userInfo.value.accTy = res.data.accTy;
               // userInfo.value.channelNo = res.data.lrnerId; // 방장의 아이디가 채널아이디(임시)
-            }
-          }).catch(e => {
-        console.error(e);
-      });
-    }
-
-    // 레디스에서 회원정보 가져와서 카운트 체크
-    const getRedisUsersList = () => {
-      store.dispatch(`users/${ACT_GET_REDIS_USERS_LIST}`, userInfo.value.channelNo)
-          .then((res) => {
-            console.log('getRedisUsersList====>',res)
-            if (res.status === 200) {
-              console.log('status 200 ==> ',connUserCnt.value)
             }
           }).catch(e => {
         console.error(e);
@@ -468,6 +459,7 @@ export default {
       chatScreenEl,
       msgArr,
       isLiveCastShow,
+      onLiveConfShow,
       isLiveConfShow,
       showLectureMenu,
       showTeacherQstnMenu,

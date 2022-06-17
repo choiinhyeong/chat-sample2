@@ -1,5 +1,5 @@
 <template>
-  <div class="cloud-talk">
+  <div class="cloud-talk" style="position: absolute; background-color: black; z-index: 9999;">
     <div class="talk-aside">
       <h3 class="title">한줄로 묻고 <br/>들어요 나우.</h3>
       <p class="text">강사님께 질문한 모든 내용을 확인하실 수 있어요.</p>

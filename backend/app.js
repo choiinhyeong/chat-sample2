@@ -62,31 +62,35 @@ let redisStoreHost = null;
 // }
 
 // 외부 레디스 주소
-// let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-// if(process.env.CHAT_ENV === 'prd'){
-//     redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-// }
-// if(process.env.SERVER == 'local'){
-//     redisClient = new redis({
-//         port: 6379,
-//         host: redisHost,
-//         connectTimeout: 10000
-//     });
-//     redisStoreHost = redisHost;
-// }else{
-//     redisClient = new redis.Cluster([
-//         {port: 6379, host: redisHost}
-//     ]);
-//     redisStoreHost = redisHost;
-// }
+let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+if(process.env.CHAT_ENV === 'prd'){
+    redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
+}
+if(process.env.SERVER == 'local'){
+    redisClient = new redis({
+        port: 6379,
+        host: redisHost,
+        connectTimeout: 10000
+    });
+    redisStoreHost = redisHost;
+}else{
+    redisClient = new redis.Cluster([
+        {port: 6379, host: redisHost}
+    ]);
+    redisStoreHost = redisHost;
+}
 // Adapting Redis
-// io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
+io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
 const apiRouter = require('./routes/api') (app,io,redisClient,pool);
 
 // Routing
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * 챗 과련 소켓
+ */
+let castOnChannelList = new Map();
 io.on('connection', (socket) => {
 
     socket.on('chat_channel_connection', async (data) => {
@@ -110,18 +114,34 @@ io.on('connection', (socket) => {
         if(redisClient !== null){
             await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
         }
-
         io.to(data.channelNo).emit('chat_channel_connection', data);
 
     });
 
     socket.on('message', async (data) => {
-        console.log('==============================>message');
+        console.log('==============================>dom message',data);
 
         const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
 
         data.socketId = socket.id;
         data.connectDate = currentDate;
+
+        // // 레디스 처리해야됨
+        // if(data.messageType === 'liveCast'){
+        //     if(data.userInfo.accessType === 'full-access'){
+        //         if(castOnChannelList.has(data.userInfo.channelNo)){
+        //             console.log('if===>')
+        //             castOnChannelList.delete(data.userInfo.channelNo);
+        //         }else{
+        //             console.log('else===>')
+        //             castOnChannelList.set(data.userInfo.channelNo, 'open');
+        //         }
+        //     }else{
+        //         if(castOnChannelList.has(data.userInfo.channelNo)){
+        //
+        //         }
+        //     }
+        // }
 
         io.to(data.channelNo).emit('message', data);
     });
@@ -161,6 +181,9 @@ io.on('connection', (socket) => {
 
 });
 
+/**
+ * dom컨트롤 관련 소켓
+ */
 io2.on('connection', (socket) => {
 
     socket.on('domSocket_channel_connection', async (data) => {

@@ -1,9 +1,9 @@
 <template>
-  <div class="container flex column" style="height: 584px;">
-    <header>
-      <input type="text" v-model="confName" :disabled="isConnected" />
-      <button @click="onConnect" v-if="!isConnected">연결하기</button>
-      <button @click="onDisConnectConference" v-if="isConnected">연결해제하기</button>
+  <div class="container flex column">
+<!--    <header>-->
+<!--      <input type="text" v-model="confName" :disabled="isConnected" />-->
+<!--      <button @click="onConnect" v-if="!isConnected">연결하기</button>-->
+<!--      <button @click="onDisConnectConference" v-if="isConnected">연결해제하기</button>-->
 <!--      <button @click="onCreateLocalScreen" v-if="isConnected && !localScreen">화면공유적용</button>-->
 <!--      <button @click="onDestroyLocalScreen" v-if="isConnected && localScreen">화면공유해제</button>-->
 
@@ -13,13 +13,12 @@
 <!--        </select>-->
 <!--        <button @click="onChangeCamera">카메라변경</button>-->
 <!--      </div>-->
-
-    </header>
+<!--    </header>-->
 
     <div class="flex row">
       <div class="media-list">
         <div class="media-block" v-if="localMedia">
-          <div class="participant-id">{{userInfo.deptNm}} {{userInfo.lrnerNm}}</div>
+          <div class="participant-id">{{userInfo.deptNm}} {{userInfo.lrnerNm}} {{myId}}</div>
           <div class="local-container"></div>
         </div>
 
@@ -29,7 +28,7 @@
             :key="i"
             :id="item.participant.id"
         >
-          <div class="participant-id">{{i}} {{item.lrnerNm}} {{item.participant.id}}</div>
+          <div class="participant-id">{{item.participant.lrnerNm}} {{item.participant.id}}</div>
           <voice-meter :level="item.level" />
           <remote-video v-for="(video, j) in item.videos" :key="j" autoplay :remoteVideo="video" />
         </div>
@@ -43,8 +42,8 @@
 </template>
 
 <script>
-import voiceMeter from './VoiceMeter.vue';
-import remoteVideo from './RemoteVideo.vue';
+import voiceMeter from './connectLive/VoiceMeter.vue';
+import remoteVideo from './connectLive/RemoteVideo.vue';
 import ConnectLive from '@connectlive/connectlive-web-sdk';
 import {ref, nextTick, onMounted, onUnmounted} from "vue";
 
@@ -61,7 +60,7 @@ export default {
     remoteVideo
   },
   setup(props){
-    const confName = ref(props.userInfo.channelNo);
+    const confName = ref(props.userInfo.channelNo+"-conf");
     const conf = ref(null);
     const localMedia = ref(null);
     const localScreen = ref(null);
@@ -76,6 +75,28 @@ export default {
     // const key = '6d03bbd05f18016c1af2baaddab2db521953dfe900223455954d6044227912a2';
     // const serviceId = 'aa3a145e-843a-4702-a0a1-fe3b0dee420b';
 
+    const init = () => {
+      console.log(conf.value,'init====>', props.userInfo);
+      if(conf.value === null) {
+        if (props.accessType === 'full-access') {
+          onConnect();
+        } else {
+          setTimeout(() => {
+            onConnect();
+          }, 3000)
+        }
+      }
+    }
+
+    onMounted(() => {
+      console.log('mounted===>', conf.value)
+      init();
+    })
+
+    onUnmounted(() => {
+      onDisConnectConference();
+    })
+
     const onProvisioning = async() => {
       await ConnectLive.signIn({
         serviceId: '2022KBH0C8AZ',
@@ -86,9 +107,6 @@ export default {
 
     const onConnect = async() => {
       await onProvisioning();
-      if(props.accessType === 'full-access'){
-        console.log('')
-      }
       await onCreateLocalMedia();
       await onCreateConference();
       await conf.value.connect(confName.value);
@@ -98,32 +116,17 @@ export default {
       isConnected.value = true;
       conf.value.publish([localMedia.value]);
 
-      audioCheckInterval.value = window.setInterval(()=>{
-        const audioLevels = conf.value.getRemoteAudioLevels();
-        audioLevels.remoteParticipants.forEach((audioParticipant)=>{
-          const participant = remoteParticipants.value.find(participant => participant.participant.id === audioParticipant.remoteParticipant.id);
-          let level = parseFloat(audioParticipant.level.toFixed(3));
-          if(level > 0.15) {
-            level = 0.15;
-          }
-          participant.level = level / 0.15 * 100;
-        });
-      }, 250);
-      // 오디오 관련?
       // audioCheckInterval.value = window.setInterval(()=>{
       //   const audioLevels = conf.value.getRemoteAudioLevels();
       //   audioLevels.remoteParticipants.forEach((audioParticipant)=>{
       //     const participant = remoteParticipants.value.find(participant => participant.participant.id === audioParticipant.remoteParticipant.id);
-      //
       //     let level = parseFloat(audioParticipant.level.toFixed(3));
       //     if(level > 0.15) {
       //       level = 0.15;
       //     }
-      //
       //     participant.level = level / 0.15 * 100;
       //   });
       // }, 250);
-
     }
 
     const onCreateLocalMedia = async() => {
@@ -132,7 +135,7 @@ export default {
         video: true
       });
 
-      // await onCreateLocalMediaCallback();
+      // await onCreateLocalMedi aCallback();
       nextTick(async() => {
         const video = localMedia.value.video.attach();
         video.className = 'local-video';
@@ -154,7 +157,6 @@ export default {
       video.className = 'local-video';
       video.style.width = '100%';
       document.querySelector('.local-container').appendChild(video);
-
       conf.value.publish([localScreen.value]);
     };
 
@@ -162,15 +164,18 @@ export default {
       conf.value = ConnectLive.createConference();
 
       conf.value.on('connected', (evt)=>{
-        console.log('connected===================>')
+        // 기존 참여자 배열을 순회하며 비디오 구독 및 엘리먼트 생성
         evt.remoteParticipants.forEach(async participant => {
           let remoteVideos = [];
           const unsubscribedVideos = participant.getUnsubscribedVideos();
           if (unsubscribedVideos.length) {
-            const videoIds = unsubscribedVideos.map(video => video.getVideoId());
+            const videoIds = unsubscribedVideos.map(video => {
+              video.getVideoId();
+            });
+
             remoteVideos = await conf.value.subscribe(videoIds);
           }
-
+          console.log('connected===================><<<<<<<<<<<<<<<<<<',participant);
           remoteParticipants.value.push({
             participant: participant,
             videos: remoteVideos,
@@ -181,7 +186,7 @@ export default {
       });
 
       conf.value.on('participantEntered', (evt)=>{
-        console.log('participantEntered===================>')
+        console.log('participantEntered===================>',evt)
         remoteParticipants.value.push({
           participant: evt.remoteParticipant,
           videos: [],
@@ -195,13 +200,13 @@ export default {
       });
 
       conf.value.on('remoteVideoPublished', async evt => {
-
-        console.log('remoteVideoPublished===============================>')
+        console.log('remoteVideoPublished===============================>',evt)
         const remoteVideos = await conf.value.subscribe([evt.remoteVideo.videoId]);
         if (remoteVideos.length) {
           const participant = remoteParticipants.value.find(item => item.participant.id === evt.remoteParticipant.id);
           if(participant) {
             participant.videos = participant.videos.concat(remoteVideos);
+            participant.lrnerNm = props.userInfo.lrnerNm;
           }
         }
       });
@@ -248,49 +253,27 @@ export default {
       localScreen.value = undefined;
     };
 
-    const onChangeCamera = async() => {
-      localMedia.value.video.detach();
+    // const onChangeCamera = async() => {
+    //   localMedia.value.video.detach();
+    //
+    //   const camaraSource = document.getElementById('camaraSource');
+    //   await localMedia.value.switchCamera(camaraSource.value);
+    //
+    //   const video = localMedia.value.video.attach();
+    //   video.className = 'local-video';
+    //   video.style.width = '100%';
+    //   document.querySelector('.local-container').appendChild(video);
+    // };
 
-      const camaraSource = document.getElementById('camaraSource');
-      await localMedia.value.switchCamera(camaraSource.value);
-
-      const video = localMedia.value.video.attach();
-      video.className = 'local-video';
-      video.style.width = '100%';
-      document.querySelector('.local-container').appendChild(video);
-    };
-
-    const onClickSpotlight = async(event) => {
-      const target = event.target;
-      const remoteParticipant = conf.value.remoteParticipants.find(participant => participant.id === target.dataset.participantid);
-      if (remoteParticipant) {
-        const t = remoteParticipant.getVideo(parseInt(target.dataset.videoid));
-        t.setQuality('h');
-      }
-      document.getElementById('spotlight-video').srcObject = target.srcObject;
-    };
-
-    const init = () => {
-      console.log('init====>', props.userInfo);
-      if(conf.value === null) {
-        if (props.accessType === 'full-access') {
-          onConnect();
-        } else {
-          setTimeout(() => {
-            onConnect();
-          }, 3000)
-        }
-      }
-    }
-
-    onUnmounted(() => {
-      onDisConnectConference();
-    })
-
-    onMounted(() => {
-      console.log('mounted===>', conf.value)
-      init();
-    })
+    // const onClickSpotlight = async(event) => {
+    //   const target = event.target;
+    //   const remoteParticipant = conf.value.remoteParticipants.find(participant => participant.id === target.dataset.participantid);
+    //   if (remoteParticipant) {
+    //     const t = remoteParticipant.getVideo(parseInt(target.dataset.videoid));
+    //     t.setQuality('h');
+    //   }
+    //   document.getElementById('spotlight-video').srcObject = target.srcObject;
+    // };
 
     return {
       confName,
@@ -310,8 +293,8 @@ export default {
       onCreateConference,
       onDisConnectConference,
       onDestroyLocalScreen,
-      onClickSpotlight,
-      onChangeCamera,
+      // onClickSpotlight,
+      // onChangeCamera,
     }
   }
 }
@@ -320,11 +303,10 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  overflow: auto;
-  position: relative;
-  /*height: 100%;*/
-  /*overflow: hidden;*/
-  /*position: absolute;*/
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  background-color: black;
   left: 0;
   top: 0;
   right: 0;
@@ -356,19 +338,19 @@ video {
   cursor: pointer;
 }
 
-.flex {
-  display: flex;
-  flex: 1;
-  height: 100%;
-}
+/*.flex {*/
+/*  display: flex;*/
+/*  flex: 1;*/
+/*  height: 100%;*/
+/*}*/
 
-.flex.column {
-  flex-direction: column;
-}
+/*.flex.column {*/
+/*  flex-direction: column;*/
+/*}*/
 
-.flex.row {
-  flex-direction: row;
-}
+/*.flex.row {*/
+/*  flex-direction: row;*/
+/*}*/
 
 header {
   height: 55px;
@@ -388,13 +370,21 @@ header {
 }
 
 .media-list {
-  width: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  /*width: 300px;*/
   padding: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   overflow: auto;
 }
 
 .media-list .media-block {
+  width: 250px;
+  height: fit-content;
+
   position: relative;
   margin-top: 5px;
   padding: 10px;

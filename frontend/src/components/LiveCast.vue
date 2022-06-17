@@ -21,7 +21,7 @@ export default {
     const serviceId = 'SERVICEID1';
     let isConnected = false;
     let isCaster = false;
-    const channelId = reactive(props.userInfo.channelNo);
+    const channelId = reactive(props.userInfo.channelNo+'-cast');
     // const key = '6d03bbd05f18016c1af2baaddab2db521953dfe900223455954d6044227912a2';
     // const serviceId = 'aa3a145e-843a-4702-a0a1-fe3b0dee420b';
 
@@ -99,6 +99,7 @@ export default {
           if (ch.status === 'COMPLETE') {
             connectStart(true);
             clearInterval(waitingInterval);
+            console.log('else remon;;;;',remon.context.state);
           }
         });
       }, 3000);
@@ -124,9 +125,10 @@ export default {
     const init = () => {
       console.log('init==>',props.accessType, props.userInfo.channelNo);
       remon = new Remon({ config, listener });
-      // 관리자일때 만들고, 아닐때는 대기
+      // 관리자이고 complete아닐때는 방송생성, 그외는 대기루프
       if(props.accessType === 'full-access'){
-        connectStart();
+        if(remon.context.state === 'COMPLETE') startSearchLoop();
+        else connectStart();
       }else{
         // findRoom();
         startSearchLoop();

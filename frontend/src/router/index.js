@@ -5,16 +5,17 @@ const routes = [
     //     path: '/',
     //     redirect: '/home'
     // },
-    // {
-    //     path: '/home',
-    //     name: 'HomeMng',
-    //     component: () => import('@/views/HomeMng')
-    // },
+    {
+        path: '/home',
+        name: 'HomeMng',
+        component: () => import('@/views/HomeMng')
+    },
     {
         path: '/',
         name: 'ChatMng',
         component: () => import('@/views/ChatMng')
     },
+
 ]
 
 const router = createRouter({

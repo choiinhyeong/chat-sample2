@@ -26,10 +26,11 @@ module.exports = function(app, io, redisClient, pool)
         let channelNo = req.params.channelNo;
         let arrayList = new Array();
 
+        console.log('channelNo;;;;',channelNo);
         if(redisClient !== null){
             await redisClient.hgetall(channelNo, function(err, obj) {
                 if(err) throw err;
-                console.log('redis users count apu ======> ',arrayList)
+                console.log('redis users count ======> ',arrayList)
                 arrayList.push(JSON.stringify(obj));
             });
         }
@@ -37,25 +38,25 @@ module.exports = function(app, io, redisClient, pool)
     });
 
     // 사용자 정보 가져오기
-    app.get('/api/chat/userlist', async function (req, res) {
-        console.log('===============> /get/userlist',)
-        let param = {};
-        pool.getConnection((err, connection) => {
-            console.log('getConnection-----------------')
-            if ( err ) {
-                throw err;
-            }else{
-                connection.query(channelSql.getUserInfo(param), function(err,results){
-                    if (!err){
-                        console.log('RESULT ======> ',results)
-                        connection.release();
-                        res.json(results);
-                    }else{
-                        throw err;
-                    }
-                });
-            }
-        });
-    });
+    // app.get('/api/chat/userlist', async function (req, res) {
+    //     console.log('===============> /get/userlist',)
+    //     let param = {};
+    //     pool.getConnection((err, connection) => {
+    //         console.log('getConnection-----------------')
+    //         if ( err ) {
+    //             throw err;
+    //         }else{
+    //             connection.query(channelSql.getUserInfo(param), function(err,results){
+    //                 if (!err){
+    //                     console.log('RESULT ======> ',results)
+    //                     connection.release();
+    //                     res.json(results);
+    //                 }else{
+    //                     throw err;
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
 
 };

@@ -1,5 +1,5 @@
 <template>
-  <video id="localVideo" style="height:584px;" autoplay muted></video>
+  <video id="localVideo" style="height:584px;" autoplay controls muted></video>
 </template>
 
 <script>

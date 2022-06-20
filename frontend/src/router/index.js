@@ -1,15 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router';
 
 const routes = [
-    // {
-    //     path: '/',
-    //     redirect: '/home'
-    // },
-    // {
-    //     path: '/home',
-    //     name: 'HomeMng',
-    //     component: () => import('@/views/HomeMng')
-    // },
     {
         path: '/cloud/now',
         name: 'CloudNow',

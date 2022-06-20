@@ -7,7 +7,7 @@
         <header class="cloud-header">
           <div class="header-column header-title">
             <a href="javascript:" @click=menuCompHideFunc><h2 class="title">클라우드</h2></a>
-            <div class="badge-now">NOW</div>
+            <div class="badge-on">ON</div> <!-- NOW로 변경할것 -->
           </div>
           <div class="header-column header-subtitle">
 <!--            <h3 class="title">[KB ACE Academy] 자산관리 STEP Ⅳ</h3>-->
@@ -144,7 +144,7 @@
                 <!-- //menu-container -->
 
                 <div class="action-buttons">
-                  <button class="btn-reconnect"><i class="icon-reconnect"></i><span class="text">재접속</span></button>
+                  <button class="btn-reconnect" @click="sendConnect"><i class="icon-reconnect"></i><span class="text">재접속</span></button>
                   <button class="btn-exit" @click="sendDisconnect"><i class="icon-exit"></i><span class="text">종료</span></button>
                 </div>
               </div>
@@ -154,8 +154,7 @@
             <div class="player-aside">
               <div class="aside-chat-container">
                 <div class="chat-screen">
-                  <ul class="chat-screen-messages" ref="chatScreenEl">
-                    <!-- my -->
+                  <ul class="chat-screen-messages">
                     <ChatMessage v-for="(item, idx) in msgArr" :key="idx" :type="item.type" :message="item.message" :lrner-id="item.lrnerId" :lrner-name="item.lrnerNm" :send-date="item.sendDate"></ChatMessage>
                   </ul>
                 </div>
@@ -232,7 +231,7 @@ export default {
 
     const store = useStore();
     let socketDns = '';
-    socketDns = 'localhost:3000'; //
+    socketDns = 'localhost:3000';
     // socketDns = 'http://devlxp.kbstar.com'
 
     let socket = io(socketDns, { transports: ['websocket'], path:'/websocket/chat' }); //채팅소켓
@@ -244,30 +243,25 @@ export default {
     const showTeacherQstnMenu = ref(false);
     const showTeacherQstnComp = ref(false);
 
-    const chatScreenEl = ref();
     const isLiveCastShow = ref(false); // 캐스트 여부
     const onLiveConfShow = ref(false); // 컨퍼런스 방송여부
     const isLiveConfShow = ref(false); // 컨퍼런스 노출여부
     const isIframeShow = ref(false);
-    const cloudType = ref('');
 
+    const userInfo = ref({})
     const connUserCnt = ref(0); // 접속유저 카운트
 
     onMounted(() => {
-      console.log('onMounted====>',socket.connected,',',domSocket.connected);
-      route.query.cloud === 'now' ? cloudType.value = 'now' : cloudType.value = 'on';
       document.body.classList.add('notscroll');
       if(!route.query.params){
         console.log('재접속 해주세요.')
       }else{
         // localStorage.setItem('info', route.query.params)
-        userInfo.value = JSON.parse(decodeURIComponent((atob(route.query.params))));
-        initUserData();
+        sendConnect();
       }
     })
 
     onUnmounted(() => {
-      console.log('onUnmounted====>',socket.connected,',',domSocket.connected);
       if(socket.connected || domSocket.connected){
         socket.disconnect();
         domSocket.disconnect();
@@ -276,8 +270,6 @@ export default {
       isLiveConfShow.value = false;
       onLiveConfShow.value = false;
     })
-
-    const userInfo = ref({})
 
     const initUserData = () => {
       userInfo.value.sendType='';
@@ -298,6 +290,11 @@ export default {
     /**
      * 클라이언트 이벤트
      */
+    const sendConnect = () => {
+      userInfo.value = JSON.parse(decodeURIComponent((atob(route.query.params))));
+      initUserData();
+    }
+
     const sendMessage = () => {
       if(inputMessage.value === undefined || inputMessage.value === '') return;
       userInfo.value.sendType = 'message';
@@ -326,7 +323,7 @@ export default {
       userInfo.value.socketId = data.socketId;
       let lrnerNm = data.lrnerNm;
       let message = lrnerNm +'님이 현재 참여하셨습니다.';
-      let curDate = timestampToDateFormat(data.connectDate, '(A) hh:mm')
+      let curDate = timestampToDateFormat(data.connectDate, '(A) hh:mm');
       msgArr.value.push({type: '', message, 'lrnerId': data.lrnerId, lrnerNm, 'sendDate': curDate});
       getRedisUsersList();
     });
@@ -344,14 +341,18 @@ export default {
     });
 
     socket.on('disconnect', (data) => {
-      console.log('disconnect ========> ', data)
+      console.log('disconnect ========> ', data);
       getRedisUsersList();
       // window.localStorage.removeItem('info');
       // location.reload(true);
     });
 
     socket.on('disconnectCustom', (data) => {
-      console.log('disconnectCustom ========> ', data)
+      console.log('disconnectCustom ========> ', data);
+      // let lrnerNm = data.lrnerNm;
+      // let message = lrnerNm +'님이 퇴장하셨습니다.';
+      // let curDate = timestampToDateFormat(data.connectDate, '(A) hh:mm')
+      // msgArr.value.push({type: '', message, 'lrnerId': data.lrnerId, lrnerNm, 'sendDate': curDate});
     });
 
     /**
@@ -375,7 +376,11 @@ export default {
       if (data.messageType === 'liveCast') {
         isLiveCastShow.value ? isLiveCastShow.value = false : isLiveCastShow.value = true;
       }else if(data.messageType === 'liveConf'){
-        onLiveConfShow.value ? onLiveConfShow.value = false : onLiveConfShow.value = true;
+        let target = btoa(encodeURIComponent(JSON.stringify(userInfo.value)));
+        window.open('/cloud/conf?params='+target,'', 'width=1280, height=800','_blank');
+        // onLiveConfShow.value ? onLiveConfShow.value = false : onLiveConfShow.value = true;
+      }else if(data.messageType === 'zep'){
+        isIframeShow.value ? isIframeShow.value = false : isIframeShow.value = true;
       }
     });
 
@@ -390,12 +395,12 @@ export default {
         // userInfo.value.messageType = 'liveConf';
         // domSocket.emit('message', userInfo.value);
       }else if(liveType === 'conf'){
-        window.open('/cloud/conf','', '_blank');
-        // userInfo.value.messageType = 'liveConf';
-        // domSocket.emit('message', userInfo.value);
+        userInfo.value.messageType = 'liveConf';
+        domSocket.emit('message', userInfo.value);
         // isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
       }else if(liveType === 'zep'){
-        isIframeShow.value ? isIframeShow.value = false : isIframeShow.value = true;
+        userInfo.value.messageType = 'zep';
+        domSocket.emit('message', userInfo.value);
       }
     }
 
@@ -472,7 +477,6 @@ export default {
     return {
       inputMessage,
       userInfo,
-      chatScreenEl,
       msgArr,
       isLiveCastShow,
       onLiveConfShow,
@@ -483,6 +487,7 @@ export default {
       showTeacherQstnComp,
       connUserCnt,
 
+      sendConnect,
       sendMessage,
       sendDisconnect,
       getUsersEncryptFunc,

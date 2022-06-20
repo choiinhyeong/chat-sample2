@@ -248,13 +248,12 @@ export default {
     const onLiveConfShow = ref(false); // 컨퍼런스 방송여부
     const isLiveConfShow = ref(false); // 컨퍼런스 노출여부
     const isIframeShow = ref(false);
-    const cloudType = ref('');
 
+    const userInfo = ref({})
     const connUserCnt = ref(0); // 접속유저 카운트
 
     onMounted(() => {
       console.log('onMounted====>',socket.connected,',',domSocket.connected);
-      route.query.cloud === 'now' ? cloudType.value = 'now' : cloudType.value = 'on';
       document.body.classList.add('notscroll');
       if(!route.query.params){
         console.log('재접속 해주세요.')
@@ -275,8 +274,6 @@ export default {
       isLiveConfShow.value = false;
       onLiveConfShow.value = false;
     })
-
-    const userInfo = ref({})
 
     const initUserData = () => {
       userInfo.value.sendType='';
@@ -321,8 +318,12 @@ export default {
      * socket이벤트
      */
     socket.on('chat_channel_connection', (data) => {
-      console.log('chat connection success ========> ',data.socketId)
+      console.log('chat connection success ========> ',data)
       userInfo.value.socketId = data.socketId;
+      let lrnerNm = data.lrnerNm;
+      let message = lrnerNm +'님이 현재 참여하셨습니다.';
+      let curDate = timestampToDateFormat(data.connectDate, '(A) hh:mm')
+      msgArr.value.push({type: '', message, 'lrnerId': data.lrnerId, lrnerNm, 'sendDate': curDate});
       getRedisUsersList();
     });
 
@@ -377,23 +378,18 @@ export default {
     /**
      * 기능 함수들
      */
+
     const connectCastFunc = (liveType) => {
       userInfo.value.sendType='message';
       if(liveType === 'cast'){
-        if(isLiveConfShow.value) {
-          alert('방송과 화상을 동시에 진행하실 수 없습니다.');
-          return;
-        }
         userInfo.value.messageType = 'liveCast'
         domSocket.emit('message', userInfo.value);
       }else if(liveType === 'conf'){
-        if(isLiveCastShow.value){
-          alert('방송과 화상을 동시에 진행하실 수 없습니다.');
-          return;
-        }
+        // let target = btoa(encodeURIComponent(JSON.stringify(userInfo.value)));
+        // window.open('/cloud/conf?params='+target,'', '_blank');
         userInfo.value.messageType = 'liveConf';
         domSocket.emit('message', userInfo.value);
-        isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
+        // isLiveConfShow.value ? isLiveConfShow.value = false : isLiveConfShow.value = true;
       }else if(liveType === 'zep'){
         isIframeShow.value ? isIframeShow.value = false : isIframeShow.value = true;
       }

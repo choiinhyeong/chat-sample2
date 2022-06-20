@@ -2,10 +2,8 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-// WhatapAgent = require('whatap').NodeAgent;
-
 app.use(cors());
-
+WhatapAgent = require('whatap').NodeAgent;
 const dotenv = require('dotenv');
 
 const path = require('path');
@@ -31,7 +29,8 @@ io.attach(server)
 io2.attach(server)
 
 const redisStore  = require('socket.io-redis');
-const redis = require('ioredis');
+const redis = require('ioredis')
+
 const port = 3000;
 
 const mysql = require('mysql');
@@ -46,7 +45,7 @@ app.use(bodyParser.urlencoded({extended : true}));
 
 const pool = mysql.createPool(dbConfig);
 
-console.log("process.env.SERVER : " , process.env.SERVER);
+console.log("process.env.SERVER : " , process.env.SERVER,',', process.env.CHAT_ENV);
 
 /**
  *  기존 레디스 관련
@@ -63,25 +62,25 @@ let redisStoreHost = null;
 // }
 
 // 외부 레디스 주소
-// let redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-// if(process.env.CHAT_ENV === 'prd'){
-//     redisHost = 'pea-hrd-dev-redis.dlhlmy.ng.0001.apn2.cache.amazonaws.com'
-// }
-// if(process.env.SERVER == 'local'){
-//     redisClient = new redis({
-//         port: 6379,
-//         host: redisHost,
-//         connectTimeout: 10000
-//     });
-//     redisStoreHost = redisHost;
-// }else{
-//     redisClient = new redis.Cluster([
-//         {port: 6379, host: redisHost}
-//     ]);
-//     redisStoreHost = redisHost;
-// }
-// // Adapting Redis
-// io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
+let redisHost = 'pea-hrd-dev-redis-001.dlhlmy.0001.apn2.cache.amazonaws.com'
+if(process.env.CHAT_ENV === 'prd'){
+    redisHost = 'pea-hrd-dev-redis-001.dlhlmy.0001.apn2.cache.amazonaws.com'
+}
+if(process.env.SERVER == 'local'){
+    redisClient = new redis({
+        port: 6379,
+        host: redisHost,
+        connectTimeout: 10000
+    });
+    redisStoreHost = redisHost;
+}else{
+    redisClient = new redis.Cluster([
+        {port: 6379, host: redisHost}
+    ]);
+    redisStoreHost = redisHost;
+}
+// Adapting Redis
+io.adapter(redisStore({ host: redisStoreHost, port: 6379 }));
 
 // api router
 const apiRouter = require('./routes/api') (app,io,redisClient,pool);
@@ -103,7 +102,6 @@ app.use(history());
 /**
  * 챗 과련 소켓
  */
-let castOnChannelList = new Map();
 io.on('connection', (socket) => {
 
     socket.on('chat_channel_connection', async (data) => {
@@ -126,6 +124,7 @@ io.on('connection', (socket) => {
 
         //레디스 채널별로 접속자 저장
         if(redisClient !== null){
+            console.log('redis is not null === ',data.channelNo,',', socket.id,',', JSON.stringify(userInfo))
             await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
         }
         io.to(data.channelNo).emit('chat_channel_connection', data);
@@ -140,29 +139,11 @@ io.on('connection', (socket) => {
         data.socketId = socket.id;
         data.connectDate = currentDate;
 
-        // // 레디스 처리해야됨
-        // if(data.messageType === 'liveCast'){
-        //     if(data.userInfo.accessType === 'full-access'){
-        //         if(castOnChannelList.has(data.userInfo.channelNo)){
-        //             console.log('if===>')
-        //             castOnChannelList.delete(data.userInfo.channelNo);
-        //         }else{
-        //             console.log('else===>')
-        //             castOnChannelList.set(data.userInfo.channelNo, 'open');
-        //         }
-        //     }else{
-        //         if(castOnChannelList.has(data.userInfo.channelNo)){
-        //
-        //         }
-        //     }
-        // }
-
         io.to(data.channelNo).emit('message', data);
     });
 
     socket.on('disconnect', async () => {
-        console.log('--------------disconnect--------------------');
-        console.log(socket.userInfo);
+        console.log('--------------disconnect--------------------',socket.userInfo.channelNo,',',socket.userInfo.socketId);
 
         if(socket.userInfo != undefined){
             //레이디스 데이터 삭제
@@ -176,6 +157,7 @@ io.on('connection', (socket) => {
         }
 
     });
+
     socket.on('forceDisconnect', function() {
         console.log('-----------------------------------');
         io.to(socket.userInfo.channelNo).emit('disconnectCustom', socket.userInfo);
@@ -198,7 +180,6 @@ io.on('connection', (socket) => {
 /**
  * dom컨트롤 관련 소켓
  */
-let confMap = new Map();
 io2.on('connection', (socket) => {
 
     socket.on('domSocket_channel_connection', async (data) => {
@@ -219,17 +200,16 @@ io2.on('connection', (socket) => {
         data.socketId2 = socket.id;
 
         //레디스 채널별로 접속자 저장
-        if(redisClient !== null){
-            await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
-        }
+        // if(redisClient !== null){
+        //     await redisClient.hmset(data.channelNo, socket.id, JSON.stringify(userInfo));
+        // }
 
         io2.to(data.channelNo).emit('domSocket_channel_connection', data);
 
     });
 
     socket.on('message', async (data) => {
-        console.log('==============================>domSocket message');
-        console.log(data);
+        console.log('==============================>domSocket message',data);
 
         const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
 
@@ -239,15 +219,15 @@ io2.on('connection', (socket) => {
         io2.to(data.channelNo).emit('message', data);
     });
 
-    socket.on('nowConfAddUser', async (data) => {
-        console.log('==============================>nowConfAddUser',data);
+    socket.on('cloudNowConfConnection', async (data) => {
+        console.log('cloudNowConfConnection;;;;',data);
 
         // const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
         //
         // data.socketId2 = socket.id;
         // data.connectDate = currentDate;
 
-        io2.to(data.channelNo).emit('nowConfAddUser', data);
+        io2.to(data.channelNo).emit('cloudNowConfConnection', data);
     });
 
     socket.on('disconnect', async () => {
@@ -256,9 +236,9 @@ io2.on('connection', (socket) => {
 
         if(socket.userInfo != undefined){
             //레이디스 데이터 삭제
-            if(redisClient !== null){
-                redisClient.hdel(socket.userInfo.channelNo,socket.userInfo.socketId2);
-            }
+            // if(redisClient !== null){
+            //     redisClient.hdel(socket.userInfo.channelNo,socket.userInfo.socketId2);
+            // }
 
             socket.broadcast.to(socket.userInfo.channelNo).emit('disconnectCustom', {
                 "userinfo" : socket.userInfo
